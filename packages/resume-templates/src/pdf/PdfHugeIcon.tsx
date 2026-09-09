@@ -10,18 +10,22 @@ import {
   Svg,
 } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import type { IconNode } from 'lucide';
 
-interface PdfLucideIconProps {
+/** Raw Hugeicons SVG nodes, rendered directly because react-pdf has no DOM SVG. */
+export type PdfIconNode = readonly (readonly [string, {
+  readonly [key: string]: string | number;
+}])[];
+
+interface PdfHugeIconProps {
   color?: string;
-  icon: IconNode;
+  icon: PdfIconNode;
   size?: number;
   style?: Style;
   strokeWidth?: number;
 }
 
 type PdfSvgPrimitive = React.ComponentType<Record<string, string | number>>;
-type LucidePaint = Pick<Required<PdfLucideIconProps>, 'color' | 'strokeWidth'>;
+type HugePaint = Pick<Required<PdfHugeIconProps>, 'color' | 'strokeWidth'>;
 
 const PDF_SVG_PRIMITIVES: Record<string, PdfSvgPrimitive> = {
   circle: Circle as unknown as PdfSvgPrimitive,
@@ -34,40 +38,42 @@ const PDF_SVG_PRIMITIVES: Record<string, PdfSvgPrimitive> = {
 };
 
 const renderNode = (
-  [tag, attributes]: IconNode[number],
+  [tag, attributes]: PdfIconNode[number],
   index: number,
-  { color, strokeWidth }: LucidePaint,
+  { color, strokeWidth }: HugePaint,
 ) => {
   const Primitive = PDF_SVG_PRIMITIVES[tag];
   if (!Primitive) return null;
 
   const normalizedAttributes = Object.fromEntries(
-    Object.entries(attributes).map(([name, value]) => [
-      name,
-      value === 'currentColor' ? color : value,
-    ]),
+    Object.entries(attributes)
+      .filter(([name]) => name !== 'key' && name !== 'strokeWidth')
+      .map(([name, value]) => [
+        name,
+        value === 'currentColor' ? color : value,
+      ]),
   );
 
   return (
     <Primitive
       key={`${tag}-${index}`}
+      {...normalizedAttributes}
       fill="none"
       stroke={color}
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...normalizedAttributes}
     />
   );
 };
 
-export const PdfLucideIcon = ({
+export const PdfHugeIcon = ({
   color = 'currentColor',
   icon,
   size = 10,
   style,
-  strokeWidth = 2,
-}: PdfLucideIconProps) => (
+  strokeWidth = 1.5,
+}: PdfHugeIconProps) => (
   <Svg
     viewBox="0 0 24 24"
     width={size}
