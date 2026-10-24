@@ -1,7 +1,7 @@
 import React from 'react';
 import { InfoType } from '../types/resume';
-import { Globe, Mail, MapPin, Phone } from '@magic-resume/icons';
-import { documentLabel } from '@magic-resume/resume-schema';
+import { Globe, Mail, MapPin, Phone } from '@magic-resume-kit/icons';
+import { documentLabel } from '@magic-resume-kit/resume-schema';
 import { Editable } from '../renderer/EditableCanvas';
 import { safeHref } from './utils';
 import { sectionIconByName } from '../sectionIcons';

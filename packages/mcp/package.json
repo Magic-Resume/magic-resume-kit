@@ -1,15 +1,17 @@
 {
-  "name": "@magic-resume/mcp",
-  "version": "0.1.0",
-  "description": "MCP server and CLI for Magic Resume, the open-source AI resume workbench: let Claude Code and other MCP clients read and edit your resumes.",
+  "name": "@magic-resume-kit/mcp",
+  "version": "1.0.0",
+  "description": "Local MCP server and CLI for schema-aware access to the Magic Resume API.",
   "license": "MIT",
-  "homepage": "https://docs.magic-resume.cn/en/guide/mcp",
+  "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/mcp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Magic-Resume/Magic-Resume.git",
+    "url": "git+https://github.com/Magic-Resume/magic-resume-kit.git",
     "directory": "packages/mcp"
   },
-  "bugs": "https://github.com/Magic-Resume/Magic-Resume/issues",
+  "bugs": {
+    "url": "https://github.com/Magic-Resume/magic-resume-kit/issues"
+  },
   "keywords": [
     "mcp",
     "mcp-server",
@@ -38,7 +40,11 @@
   },
   "files": [
     "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "LICENSE",
+    "README.md",
+    "!dist/**/*.test.*",
+    "!dist/**/*.tsbuildinfo"
   ],
   "publishConfig": {
     "access": "public",
@@ -56,8 +62,8 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@magic-resume/resume-schema": "workspace:*",
-    "@magic-resume/resume-templates": "workspace:*",
+    "@magic-resume-kit/resume-schema": "workspace:*",
+    "@magic-resume-kit/resume-templates": "workspace:*",
     "@types/node": "^20.19.41",
     "esbuild": "^0.28.0",
     "typescript": "^5"

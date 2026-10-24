@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { templateSchema } from '@magic-resume/resume-schema';
+import { templateSchema } from '@magic-resume-kit/resume-schema';
 import { getTemplateById, getTemplateManifestById } from '../registry';
 import { MagicResumeRenderer } from '../renderer/MagicResumeRenderer';
 import { MagicResumePdfDocument } from '../pdf/MagicResumePdfDocument';

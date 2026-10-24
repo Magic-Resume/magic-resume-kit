@@ -1,0 +1,34 @@
+{
+  "name": "magic-resume-kit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-Resume/magic-resume-kit.git"
+  },
+  "packageManager": "pnpm@10.28.1",
+  "engines": {
+    "node": ">=22.13.0",
+    "pnpm": ">=10.28.1"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && turbo run build",
+    "lint": "turbo run lint && pnpm check:boundary",
+    "typecheck": "turbo run lint",
+    "test": "turbo run test && node --test scripts/*.test.mjs",
+    "check:boundary": "node scripts/check-boundary.mjs",
+    "check:packages": "node scripts/check-packages.mjs",
+    "test:consumer": "node scripts/consumer-smoke.mjs",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "publish-packages": "changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "turbo": "2.9.16",
+    "typescript": "5.9.3",
+    "yaml": "2.9.0"
+  }
+}

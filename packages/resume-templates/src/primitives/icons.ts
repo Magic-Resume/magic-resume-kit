@@ -1,4 +1,4 @@
-import { ResumeIconNodes } from '@magic-resume/icons';
+import { ResumeIconNodes } from '@magic-resume-kit/icons';
 import type { PdfIconNode } from '../pdf/PdfHugeIcon';
 
 const {

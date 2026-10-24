@@ -5,7 +5,7 @@ import {
   resumeSchema,
   sampleResume,
   templateIds,
-} from '@magic-resume/resume-schema';
+} from '@magic-resume-kit/resume-schema';
 import type { MagicResumeApiClient } from './client.js';
 
 const { applyPatch } = fastJsonPatch;

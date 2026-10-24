@@ -125,7 +125,7 @@ export interface CritiqueOptions {
    * 与服务端注册的并不一样）、真实 DOM 布局、`scrollHeight` 直接量。
    * 服务端要重新注册一遍字体去逼近浏览器的结果，是把简单的事做复杂。
    *
-   * `@magic-resume/resume-templates/server` 里的 Node 版测量器仍然有用——
+   * `@magic-resume-kit/resume-templates/server` 里的 Node 版测量器仍然有用——
    * CI 与冒烟需要一个不依赖浏览器的量法。
    */
   measure?: MeasureFn;

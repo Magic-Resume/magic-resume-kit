@@ -54,6 +54,14 @@
   --text-mr-title: 1rem;
   --text-mr-title--line-height: 1.375rem;
   --text-mr-title--font-weight: 600;
+  /* 整页工具（GenUI 自由组合页面）的第一行标题。 */
+  --text-mr-headline: 1.25rem;
+  --text-mr-headline--line-height: 1.75rem;
+  --text-mr-headline--font-weight: 640;
+  /* 关键数字（GenUI 的 Stat）：等宽数字由调用方加 tabular-nums。 */
+  --text-mr-figure: 1.5rem;
+  --text-mr-figure--line-height: 2rem;
+  --text-mr-figure--font-weight: 640;
 
   --radius-mr-control: 8px;
   --radius-mr-compact: 5px;
@@ -106,6 +114,17 @@
   --mr-warning: #f59e0b;
   --mr-warning-ink: #fcd34d;
   --mr-warning-tint: rgb(245 158 11 / 0.12);
+  /* 第四种语气：「可补充、待处理」。只给 GenUI 的 Tone 用，不作强调色。 */
+  --mr-violet: #a78bfa;
+  --mr-violet-ink: #c4b5fd;
+  --mr-violet-tint: rgb(167 139 250 / 0.12);
+  /* 分类色：一组最多 6 种，深色取 400 档。 */
+  --mr-chart-1: #38bdf8;
+  --mr-chart-2: #34d399;
+  --mr-chart-3: #fbbf24;
+  --mr-chart-4: #a78bfa;
+  --mr-chart-5: #22d3ee;
+  --mr-chart-6: #fb7185;
   --mr-scrim: rgb(0 0 0 / 0.6);
   --mr-shadow-panel: 0 18px 44px -22px rgb(0 0 0 / 0.7);
   --mr-shadow-control: 0 1px 2px rgb(0 0 0 / 0.18);
@@ -144,6 +163,16 @@
   --mr-warning: oklch(0.72 0.16 75);
   --mr-warning-ink: oklch(0.52 0.13 75);
   --mr-warning-tint: oklch(0.72 0.16 75 / 0.12);
+  --mr-violet: oklch(0.55 0.18 290);
+  --mr-violet-ink: oklch(0.47 0.16 290);
+  --mr-violet-tint: oklch(0.55 0.18 290 / 0.12);
+  /* 浅色取 700 档，保证作文字和描边时达到 AA。 */
+  --mr-chart-1: #0369a1;
+  --mr-chart-2: #047857;
+  --mr-chart-3: #b45309;
+  --mr-chart-4: #6d28d9;
+  --mr-chart-5: #0e7490;
+  --mr-chart-6: #be123c;
   --mr-scrim: rgb(0 0 0 / 0.55);
   --mr-shadow-panel: 0 12px 32px oklch(0.2 0.02 85 / 0.12);
   --mr-shadow-control: 0 1px 2px oklch(0.2 0.02 85 / 0.06);
@@ -182,6 +211,15 @@
   --color-mr-warning: var(--mr-warning);
   --color-mr-warning-ink: var(--mr-warning-ink);
   --color-mr-warning-tint: var(--mr-warning-tint);
+  --color-mr-violet: var(--mr-violet);
+  --color-mr-violet-ink: var(--mr-violet-ink);
+  --color-mr-violet-tint: var(--mr-violet-tint);
+  --color-mr-chart-1: var(--mr-chart-1);
+  --color-mr-chart-2: var(--mr-chart-2);
+  --color-mr-chart-3: var(--mr-chart-3);
+  --color-mr-chart-4: var(--mr-chart-4);
+  --color-mr-chart-5: var(--mr-chart-5);
+  --color-mr-chart-6: var(--mr-chart-6);
   --color-mr-scrim: var(--mr-scrim);
   --shadow-mr-panel: var(--mr-shadow-panel);
   --shadow-mr-control: var(--mr-shadow-control);

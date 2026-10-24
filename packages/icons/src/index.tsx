@@ -27,6 +27,7 @@ import {
   Bug01Icon,
   Building02Icon,
   BulbIcon,
+  Calendar03Icon,
   CallIcon,
   CanvasIcon,
   Cancel01Icon,
@@ -47,6 +48,7 @@ import {
   ContactIcon,
   Copy01Icon,
   DashboardSpeed02Icon,
+  DatabaseIcon,
   Delete02Icon,
   Download01Icon,
   DragDropVerticalIcon,
@@ -66,6 +68,7 @@ import {
   Image01Icon,
   InformationCircleIcon,
   Key01Icon,
+  LaptopIcon,
   LanguageSquareIcon,
   Layout01Icon,
   Layout2RowIcon,
@@ -105,8 +108,10 @@ import {
   SearchAddIcon,
   SearchMinusIcon,
   SentIcon,
+  ServerStack02Icon,
   Settings01Icon,
   ShapesIcon,
+  SmartPhone01Icon,
   Share01Icon,
   Shield01Icon,
   SparklesIcon,
@@ -217,6 +222,7 @@ export const BotMessageSquare = roundedIcon(ChatBotIcon);
 export const Briefcase = roundedIcon(Briefcase01Icon);
 export const BriefcaseBusiness = roundedIcon(Briefcase01Icon);
 export const Bug = roundedIcon(Bug01Icon);
+export const Calendar = roundedIcon(Calendar03Icon);
 export const Building2 = roundedIcon(Building02Icon);
 export const Check = roundedIcon(Tick01Icon);
 export const CheckCircle2 = roundedIcon(CheckmarkCircle01Icon);
@@ -239,6 +245,7 @@ export const Copy = roundedIcon(Copy01Icon);
 export const CornerDownLeft = roundedIcon(ArrowDownLeft01Icon);
 export const CornerDownRight = roundedIcon(ArrowDownRight01Icon);
 export const CornerUpLeft = roundedIcon(ArrowUpLeft01Icon);
+export const Database = roundedIcon(DatabaseIcon);
 export const Download = roundedIcon(Download01Icon);
 export const ExternalLink = roundedIcon(ArrowUpRight01Icon);
 export const Eye = roundedIcon(ViewIcon);
@@ -268,6 +275,7 @@ export const Info = roundedIcon(InformationCircleIcon);
 export const Italic = roundedIcon(TextItalicIcon);
 export const KeyRound = roundedIcon(Key01Icon);
 export const Languages = roundedIcon(LanguageSquareIcon);
+export const Laptop = roundedIcon(LaptopIcon);
 export const Layout = roundedIcon(Layout01Icon);
 export const LayoutDashboard = roundedIcon(LayoutGridIcon);
 export const LayoutGrid = roundedIcon(LayoutGridIcon);
@@ -308,8 +316,10 @@ export const RotateCcw = roundedIcon(RefreshIcon);
 export const Route = roundedIcon(Route01Icon);
 export const Search = roundedIcon(Search01Icon);
 export const Send = roundedIcon(SentIcon);
+export const Server = roundedIcon(ServerStack02Icon);
 export const Settings = roundedIcon(Settings01Icon);
 export const Shapes = roundedIcon(ShapesIcon);
+export const Smartphone = roundedIcon(SmartPhone01Icon);
 export const Share2 = roundedIcon(Share01Icon);
 export const Shield = roundedIcon(Shield01Icon);
 export const ShieldAlert = roundedIcon(Alert02Icon);

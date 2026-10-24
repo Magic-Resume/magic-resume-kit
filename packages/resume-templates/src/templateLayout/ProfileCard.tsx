@@ -1,7 +1,7 @@
-import { documentLabel } from '@magic-resume/resume-schema';
+import { documentLabel } from '@magic-resume-kit/resume-schema';
 import React from 'react';
 import { InfoType } from '../types/resume';
-import { Globe, Mail, MapPin, Phone } from '@magic-resume/icons';
+import { Globe, Mail, MapPin, Phone } from '@magic-resume-kit/icons';
 
 interface Props {
   data: InfoType;

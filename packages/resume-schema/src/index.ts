@@ -147,7 +147,7 @@ export const sectionOrderItemSchema = z.object({
   /** Explicit printed heading; absent uses the document language. */
   title: z.string().max(120).optional(),
   /**
-   * Icon name from `SECTION_ICONS` in @magic-resume/resume-templates. A name
+   * Icon name from `SECTION_ICONS` in @magic-resume-kit/resume-templates. A name
    * rather than a component because a resume is persisted, synced and exported
    * as JSON. Absent means "guess" — the renderer still matches on the section
    * key and on keywords in the title.
@@ -174,7 +174,7 @@ export const resumeSchema = z.object({
    * 不是「模板能分享」。分享与画廊是独立的产品决定，留到以后。
    *
    * 形状不在这里约束（`z.unknown()`）：真正的校验在
-   * `@magic-resume/resume-templates` 的 `validateTemplate` + JSON Schema 里，
+   * `@magic-resume-kit/resume-templates` 的 `validateTemplate` + JSON Schema 里，
    * 在这里再写一份 Zod 版就是第二份会漂的定义。渲染器拿到坏树会降级成不渲染，
    * 不会崩——所以这里放行、那里把关是安全的分工。
    */
@@ -217,7 +217,7 @@ export const updateTemplateInputSchema = resumeUpdateBaseSchema.extend({
    * 不是「模板能分享」。分享与画廊是独立的产品决定，留到以后。
    *
    * 形状不在这里约束（`z.unknown()`）：真正的校验在
-   * `@magic-resume/resume-templates` 的 `validateTemplate` + JSON Schema 里，
+   * `@magic-resume-kit/resume-templates` 的 `validateTemplate` + JSON Schema 里，
    * 在这里再写一份 Zod 版就是第二份会漂的定义。渲染器拿到坏树会降级成不渲染，
    * 不会崩——所以这里放行、那里把关是安全的分工。
    */

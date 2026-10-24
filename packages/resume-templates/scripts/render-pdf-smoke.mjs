@@ -1,21 +1,18 @@
 import assert from 'node:assert/strict';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join, resolve } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import React from 'react';
 import { Document, Font, Page, Text, renderToBuffer } from '@react-pdf/renderer';
-import { ResumeIconNodes } from '@magic-resume/icons';
+import { ResumeIconNodes } from '@magic-resume-kit/icons';
 import { magicTemplateList } from '../src/config/magic-templates.ts';
 import { MagicResumePdfDocument } from '../src/pdf/MagicResumePdfDocument.tsx';
 import { PdfHugeIcon } from '../src/pdf/PdfHugeIcon.tsx';
 import { magicPdfHyphenationCallback } from '../src/pdf/hyphenation.ts';
 
-const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-// 完整字体（非子集）在 full/ 下——根目录只有 .woff2 子集版。此前这里少了 `full`，
-// 于是这个冒烟脚本一直因 ENOENT 挂着，仓库唯一的 PDF 检查形同虚设。
-const webFontsDir = resolve(packageDir, '../../apps/web/public/fonts/full');
+if (!process.env.MAGIC_RESUME_FONT_DIR) throw new Error('Set MAGIC_RESUME_FONT_DIR to the host fonts/full directory. Fonts are not bundled.');
+const webFontsDir = resolve(process.env.MAGIC_RESUME_FONT_DIR);
 
 Font.register({
   family: 'Source Han Sans SC',

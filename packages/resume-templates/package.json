@@ -1,6 +1,6 @@
 {
-  "name": "@magic-resume/resume-templates",
-  "version": "0.1.0",
+  "name": "@magic-resume-kit/resume-templates",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -60,13 +60,24 @@
     "./types/resume": {
       "types": "./dist/types/resume.d.ts",
       "default": "./dist/types/resume.js"
+    },
+    "./patches/*": "./patches/*",
+    "./pdf/charset": {
+      "types": "./dist/pdf/cjk-subset-charset.d.ts",
+      "default": "./dist/pdf/cjk-subset-charset.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md",
+    "!dist/**/*.test.*",
+    "!dist/**/*.tsbuildinfo",
+    "patches"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/fix-esm-extensions.mjs",
@@ -80,8 +91,8 @@
     "freeze:update": "node scripts/check-legacy-freeze.mjs --update"
   },
   "dependencies": {
-    "@magic-resume/icons": "workspace:*",
-    "@magic-resume/resume-schema": "workspace:*",
+    "@magic-resume-kit/icons": "workspace:*",
+    "@magic-resume-kit/resume-schema": "workspace:*",
     "@react-pdf/renderer": "4.5.1",
     "dompurify": "^3.2.6",
     "lodash.get": "^4.4.2",
@@ -91,7 +102,6 @@
     "react-pdf-html": "2.1.5"
   },
   "peerDependencies": {
-    "next": ">=15",
     "react": ">=19",
     "react-dom": ">=19",
     "react-i18next": "^15.5.2"
@@ -106,5 +116,16 @@
     "ajv": "^8.20.0",
     "tsx": "4.21.0",
     "typescript": "^5"
+  },
+  "description": "Resume template DSL, registry, DOM renderer and browser PDF renderer.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-Resume/magic-resume-kit.git",
+    "directory": "packages/resume-templates"
+  },
+  "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/resume-templates",
+  "bugs": {
+    "url": "https://github.com/Magic-Resume/magic-resume-kit/issues"
   }
 }

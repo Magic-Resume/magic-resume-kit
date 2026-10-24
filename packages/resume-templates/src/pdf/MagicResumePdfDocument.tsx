@@ -1,4 +1,4 @@
-import { documentLabel, normalizeDocumentLanguage, resolveDocumentLanguage, documentSectionTitle } from '@magic-resume/resume-schema';
+import { documentLabel, normalizeDocumentLanguage, resolveDocumentLanguage, documentSectionTitle } from '@magic-resume-kit/resume-schema';
 /**
  * 导出的 PDF 是**一整页长页**，不是分页 A4——这是刻意选择，不是 bug。
  *
@@ -24,7 +24,7 @@ import {
   View,
 } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { ResumeIconNodes } from '@magic-resume/icons';
+import { ResumeIconNodes } from '@magic-resume-kit/icons';
 import type {
   ComponentDefinition,
   ComponentStyle,

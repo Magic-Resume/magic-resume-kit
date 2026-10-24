@@ -1,7 +1,6 @@
 {
-  "name": "@magic-resume/design-system",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@magic-resume-kit/design-system",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +27,11 @@
   },
   "files": [
     "dist",
-    "styles"
+    "styles",
+    "LICENSE",
+    "README.md",
+    "!dist/**/*.test.*",
+    "!dist/**/*.tsbuildinfo"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -45,8 +48,23 @@
     "react": ">=19"
   },
   "devDependencies": {
-    "@magic-resume/tsconfig": "workspace:*",
+    "@magic-resume-kit/tsconfig": "workspace:*",
     "@types/react": "^19.1.6",
     "typescript": "^5"
+  },
+  "description": "Semantic design tokens, Tailwind styles and React primitives for Magic Resume.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-Resume/magic-resume-kit.git",
+    "directory": "packages/design-system"
+  },
+  "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/design-system",
+  "bugs": {
+    "url": "https://github.com/Magic-Resume/magic-resume-kit/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

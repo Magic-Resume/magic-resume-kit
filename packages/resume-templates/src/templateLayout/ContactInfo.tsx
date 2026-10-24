@@ -1,6 +1,6 @@
 import React from 'react';
 import { InfoType } from '../types/resume';
-import { Globe, Mail, MapPin, Phone, type LucideIcon } from '@magic-resume/icons';
+import { Globe, Mail, MapPin, Phone, type LucideIcon } from '@magic-resume-kit/icons';
 import { safeHref } from './utils';
 import { sectionIconByName, type SectionIconComponent } from '../sectionIcons';
 

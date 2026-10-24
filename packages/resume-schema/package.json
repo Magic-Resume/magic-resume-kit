@@ -1,6 +1,6 @@
 {
-  "name": "@magic-resume/resume-schema",
-  "version": "0.1.0",
+  "name": "@magic-resume-kit/resume-schema",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -8,13 +8,19 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./schema.json": "./dist/schema.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md",
+    "!dist/**/*.test.*",
+    "!dist/**/*.tsbuildinfo"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/write-schema.mjs",
@@ -27,5 +33,16 @@
   },
   "devDependencies": {
     "typescript": "^5"
+  },
+  "description": "Validated resume data contracts, template IDs and JSON Schema.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Magic-Resume/magic-resume-kit.git",
+    "directory": "packages/resume-schema"
+  },
+  "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/resume-schema",
+  "bugs": {
+    "url": "https://github.com/Magic-Resume/magic-resume-kit/issues"
   }
 }

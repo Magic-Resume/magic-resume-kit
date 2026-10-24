@@ -7,7 +7,7 @@ export { getFieldValue, getFieldEntry, safeHref } from '../fieldAccess';
 import {
   Briefcase, Certificate, GraduationCap, FolderKanban, Wrench,
   Languages, Award, User, Globe,
-} from '@magic-resume/icons';
+} from '@magic-resume-kit/icons';
 
 const SECTION_ICON_MAP: Record<string, SectionIconComponent> = {
   experience: Briefcase,

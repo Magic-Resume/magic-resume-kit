@@ -1,5 +1,5 @@
 /**
- * 纯函数子路径（`@magic-resume/resume-templates/core`）。
+ * 纯函数子路径（`@magic-resume-kit/resume-templates/core`）。
  *
  * **不碰 React、不碰渲染器**——整条链上只有 `lodash.get` 一个依赖。
  * 给 agent-service 这类需要校验/编译模板、但绝不该为此拖进 react-dom + react-pdf

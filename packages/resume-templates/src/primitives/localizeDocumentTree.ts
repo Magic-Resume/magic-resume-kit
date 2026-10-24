@@ -1,4 +1,4 @@
-import type { Resume } from '@magic-resume/resume-schema';
+import type { Resume } from '@magic-resume-kit/resume-schema';
 import { resolveSectionTitle } from '../sectionSemantics';
 import type { ResolvedNode } from './ir';
 

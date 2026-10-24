@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { getTemplateManifestList } from '@magic-resume/resume-templates/registry';
+import { getTemplateManifestList } from '@magic-resume-kit/resume-templates/registry';
 import { z } from 'zod';
 import { createApiClient } from './client.js';
 import { loadConfig } from './config.js';

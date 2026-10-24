@@ -1,4 +1,4 @@
-import type { TemplateId } from '@magic-resume/resume-schema';
+import type { TemplateId } from '@magic-resume-kit/resume-schema';
 import { azurillTemplate } from './config/azurill-template';
 import { bronzorTemplate } from './config/bronzor-template';
 import { chikoritaTemplate } from './config/chikorita-template';

@@ -21,7 +21,7 @@ import {
   Trophy,
   User,
   Wrench,
-} from '@magic-resume/icons';
+} from '@magic-resume-kit/icons';
 import React from 'react';
 
 export type SectionIconComponent = React.ComponentType<{

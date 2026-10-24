@@ -1,9 +1,8 @@
 /*
- * Publishable JS for `npx -y @magic-resume/mcp`.
+ * Publishable JS for `npx -y @magic-resume-kit/mcp`.
  *
- * resume-schema and resume-templates are private workspace packages that are
- * not on npm, so a plain tsc build would publish imports nobody can install.
- * Bundle them in and keep only the real npm dependencies external. tsc still
+ * Bundle the schema and registry so CLI consumers do not need the React or PDF
+ * dependency graph. Only the MCP runtime dependencies stay external. tsc still
  * emits the .d.ts files (--emitDeclarationOnly); they reference no workspace
  * package, so they ship as they are.
  */

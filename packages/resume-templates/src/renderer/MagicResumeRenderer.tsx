@@ -1,4 +1,4 @@
-import { normalizeDocumentLanguage, resolveDocumentLanguage } from '@magic-resume/resume-schema';
+import { normalizeDocumentLanguage, resolveDocumentLanguage } from '@magic-resume-kit/resume-schema';
 import React, { useMemo } from 'react';
 import { MagicTemplateDSL } from '../types/magic-dsl';
 import { Resume } from '../types/resume';

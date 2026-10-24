@@ -8,15 +8,15 @@ the consuming feature module.
 ## Usage
 
 ```tsx
-import { Button, Field, Input, buttonVariants } from '@magic-resume/design-system';
+import { Button, Field, Input, buttonVariants } from '@magic-resume-kit/design-system';
 ```
 
 Import the CSS contract once from each app entrypoint:
 
 ```css
-@import '@magic-resume/design-system/styles/tokens.css';
-@import '@magic-resume/design-system/styles/utilities.css';
-@import '@magic-resume/design-system/styles/motion.css';
+@import '@magic-resume-kit/design-system/styles/tokens.css';
+@import '@magic-resume-kit/design-system/styles/utilities.css';
+@import '@magic-resume-kit/design-system/styles/motion.css';
 ```
 
 Use static recipe maps for stateful variants. Keep one-off layout utilities in

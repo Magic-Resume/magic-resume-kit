@@ -1,4 +1,4 @@
-import { documentSectionTitle, isDefaultSectionLabel, normalizeDocumentLanguage, resolveDocumentLanguage, type Resume } from '@magic-resume/resume-schema';
+import { documentSectionTitle, isDefaultSectionLabel, normalizeDocumentLanguage, resolveDocumentLanguage, type Resume } from '@magic-resume-kit/resume-schema';
 
 /**
  * 分区的语义：中文标题，与「哪些分区是内建的」。

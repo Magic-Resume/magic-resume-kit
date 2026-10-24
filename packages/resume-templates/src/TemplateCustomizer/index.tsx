@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Palette, TextFont, Layout } from '@magic-resume/icons';
+import { Palette, TextFont, Layout } from '@magic-resume-kit/icons';
 import { useTranslation } from 'react-i18next';
 import { MagicTemplateDSL } from '../types/magic-dsl';
 import ColorPicker from './ColorPicker';

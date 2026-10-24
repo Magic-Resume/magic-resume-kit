@@ -1,5 +1,5 @@
 import React from 'react';
-import { documentLabel } from '@magic-resume/resume-schema';
+import { documentLabel } from '@magic-resume-kit/resume-schema';
 import type { InfoType } from '../types/resume';
 import { Editable } from '../renderer/EditableCanvas';
 import { safeHref } from './utils';

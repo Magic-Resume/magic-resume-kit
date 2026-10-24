@@ -1,5 +1,5 @@
 /** Compatibility exports for template consumers. The persisted resume contract
- * is defined once in @magic-resume/resume-schema. */
+ * is defined once in @magic-resume-kit/resume-schema. */
 export type {
   CustomInfoField,
   CustomTemplateConfig,
@@ -8,7 +8,7 @@ export type {
   Section,
   SectionItem,
   SectionOrderItem as SectionOrder,
-} from '@magic-resume/resume-schema';
+} from '@magic-resume-kit/resume-schema';
 
 export type CustomItemField = {
   id: string;

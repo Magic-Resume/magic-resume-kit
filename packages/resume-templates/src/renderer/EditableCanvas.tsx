@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { Check, X, RotateCcw, Sparkles, Plus, AlertCircle, ChevronDown } from '@magic-resume/icons';
+import { Check, X, RotateCcw, Sparkles, Plus, AlertCircle, ChevronDown } from '@magic-resume-kit/icons';
 import DOMPurify from 'dompurify';
 import { WysiwygContent } from '../templateLayout/WysiwygContent';
 import { InlineFormattedText } from './InlineFormattedText';
