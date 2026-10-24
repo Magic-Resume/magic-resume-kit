@@ -27,3 +27,5 @@ jobs:
         with:
           name: public-packages
           path: .artifacts/*.tgz
+          include-hidden-files: true
+          if-no-files-found: error
