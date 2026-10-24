@@ -4,7 +4,7 @@ Six public packages start at 1.0.0 under `@magic-resume-kit` on npmjs. The sourc
 
 ## Release workflow
 
-The workflow installs dependencies without a release cache, builds, typechecks, runs the full unit suites, checks the public boundary and archives, and verifies an isolated installation. It publishes the exact checked archives using npm 11.21.1, then verifies anonymous installation from the registry, including a separate MCP-only installation. Existing versions are retained, so a partial publication can be safely resumed.
+The workflow installs dependencies without a release cache, builds, typechecks, runs the full unit suites, checks the public boundary and archives, and verifies an isolated installation. It publishes the exact checked archives using npm 11.21.1, then verifies anonymous installation from the registry, including a separate MCP-only installation. If npm has not yet exposed one of the exact released versions, verification retries up to 12 times with 10 seconds between attempts and fresh metadata checks. Other errors fail immediately. Existing versions are retained, so a partial publication can be safely resumed.
 
 The workflow creates no pull requests and sends no application update events. It needs no GitHub App or cross-repository credentials. Changesets remains the local version/changelog tool: run `pnpm changeset`, then `pnpm version-packages` and commit the resulting versions before release. Pending changesets block publication rather than triggering a version PR. The private tsconfig workspace is never published.
 

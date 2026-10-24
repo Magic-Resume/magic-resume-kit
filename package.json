@@ -24,7 +24,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "publish-packages": "node scripts/publish-packages.mjs",
-    "test:published": "node scripts/consumer-smoke.mjs --registry"
+    "test:published": "node scripts/verify-published.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",

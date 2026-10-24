@@ -8,7 +8,7 @@ const registry = process.argv.includes('--registry');
 const artifacts = registry ? publicPackages().map(pkg => ({name:pkg.name, version:pkg.version, file:`${pkg.name}@${pkg.version}`})) : JSON.parse(readFileSync(join(root, '.artifacts/manifest.json'), 'utf8'));
 const dir = mkdtempSync(join(tmpdir(), 'magic-kit-consumer-'));
 const mcpDir = mkdtempSync(join(tmpdir(), 'magic-kit-mcp-'));
-const env = {...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(?:npm_config_|npm_package_|pnpm_|node_auth_token$|npm_token$)/i.test(key))), NPM_CONFIG_USERCONFIG: join(dir, '.npmrc'), NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org/'};
+const env = {...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/^(?:npm_config_|npm_package_|pnpm_|node_auth_token$|npm_token$)/i.test(key))), NPM_CONFIG_USERCONFIG: join(dir, '.npmrc'), NPM_CONFIG_REGISTRY: 'https://registry.npmjs.org/', ...(registry ? {NPM_CONFIG_PREFER_ONLINE: 'true'} : {})};
 delete env.NODE_AUTH_TOKEN; delete env.NPM_TOKEN;
 writeFileSync(join(dir, '.npmrc'), 'registry=https://registry.npmjs.org/\n@magic-resume-kit:registry=https://registry.npmjs.org/\n');
 writeFileSync(join(dir, 'package.json'), JSON.stringify({private: true, type: 'module'}));
