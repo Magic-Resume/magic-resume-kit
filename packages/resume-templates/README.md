@@ -44,3 +44,9 @@ patchedDependencies:
 An npm consumer can import and render templates without these patches, but matching the applications' synthetic bold PDF output requires an equivalent patch mechanism. Do not claim PDF parity from installation alone.
 
 For the font-dependent PDF regression check, set `MAGIC_RESUME_FONT_DIR` to the host's `public/fonts/full` directory and run `pnpm --filter @magic-resume-kit/resume-templates test:pdf` in this repository.
+
+## Public distribution
+
+Install `@magic-resume-kit/resume-templates` from the public [npm registry](https://www.npmjs.com/package/@magic-resume-kit/resume-templates). No GitHub Packages token or private registry configuration is required. The package source and release workflow live in [Magic Resume Kit](https://github.com/Magic-Resume/magic-resume-kit).
+
+See the [consumer integration guide](https://github.com/Magic-Resume/magic-resume-kit/blob/main/docs/consumer-migration.md) for host requirements and the [release guide](https://github.com/Magic-Resume/magic-resume-kit/blob/main/docs/releasing.md) for versioning and publication.

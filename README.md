@@ -1,6 +1,6 @@
 # Magic Resume Kit
 
-Magic Resume Kit contains the shared MIT packages used by the Magic Resume applications. Packages use the `@magic-resume-kit` namespace on npmjs so public installations do not require a GitHub Packages token. The initial package version is 1.0.0; publishing is a separate release step.
+Magic Resume Kit contains the shared MIT packages used by the Magic Resume applications. Packages use the `@magic-resume-kit` namespace on npmjs so public installations do not require a GitHub Packages token. All six packages are available on npmjs, starting at 1.0.0. [GitHub releases](https://github.com/Magic-Resume/magic-resume-kit/releases) record published versions and CI verification.
 
 | Package | Purpose |
 | --- | --- |
@@ -29,7 +29,7 @@ pnpm test:consumer
 
 `check:packages` creates six tarballs under `.artifacts`, checks every exported file and rejects unpublished workspace references, tests and font assets. `test:consumer` installs those tarballs in an isolated project using npmjs without user credentials, then verifies imports, types, React rendering and the MCP executable. A second isolated installation checks that MCP works without React, Next.js or PDF dependencies. The full package test suites run in GitHub CI.
 
-PDF consumers must provide host fonts and apply the included patches. Tailwind consumers must scan the installed packages. See [template integration](packages/resume-templates/README.md), [consumer migration](docs/consumer-migration.md) and [release setup](docs/releasing.md). The confirmed [package boundary](docs/package-boundary.md) and [local verification record](docs/verification.md) describe what is included and what remains before release.
+PDF consumers must provide host fonts and apply the included patches. Tailwind consumers must scan the installed packages. See [template integration](packages/resume-templates/README.md), [consumer migration](docs/consumer-migration.md) and [release setup](docs/releasing.md). The confirmed [package boundary](docs/package-boundary.md) and [verification record](docs/verification.md) describe the package boundary and application integration checks.
 
 ## Source history
 

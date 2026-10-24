@@ -1,6 +1,6 @@
-# Local extraction verification
+# Extraction and release verification
 
-Verified on 2026-10-25 before any remote repository creation or package publication.
+Extraction and first-release verification recorded on 2026-10-25. Package release checks and application integration checks have separate acceptance scopes.
 
 ## Package checks
 
@@ -27,8 +27,12 @@ Both applications were migrated only in disposable local clones, using the same 
 
 The open-source production build uses its production TypeScript configuration. Its unrestricted test-inclusive TypeScript check still encounters pre-existing references in old cloud/interview tests; these are outside the extraction. Commercial TypeScript also passes with tests included. The commercial production build used a placeholder Clerk publishable key and did not connect to a real account.
 
-## Remaining release gates
+## Public repository and release checks
 
-The full unit suites are configured in GitHub CI and have not been run for this new repository remotely. Browser interactions and rendered PDF output have not been re-accepted as part of package extraction. Repeat the editor, light/dark, template and PDF checks before merging the actual application migrations.
+The public repository is [Magic-Resume/magic-resume-kit](https://github.com/Magic-Resume/magic-resume-kit). [CI run 40116178471](https://github.com/Magic-Resume/magic-resume-kit/actions/runs/40116178471), at source commit `b6c47949970a7e3871aff35ece0419750789fc7d`, passed all builds, TypeScript checks, 252 tests, public-boundary checks, archive validation and isolated consumer installation. All six CI archives were downloaded, checked against their manifests and published as 1.0.0. The public registry archive SHA-256 hashes match those CI artifacts.
 
-There is no remote repository, npm publication or application dependency switch from this work. First establish repository and npm organization access, complete CI and publication, verify anonymous installation of the published versions, then apply the documented consumer migration. Production deployment remains a separate step.
+The 1.0.0 bootstrap used maintainer authentication and does not include GitHub provenance. Subsequent versions use the [publish workflow](../.github/workflows/publish.yml), which repeats the checks, publishes with OIDC and verifies anonymous installation from npm. The [GitHub release records](https://github.com/Magic-Resume/magic-resume-kit/releases) contain the corresponding publication and workflow receipts; a configured binding alone is not evidence of successful OIDC publication.
+
+## Remaining application acceptance
+
+Browser interactions and rendered PDF output have not been re-accepted as part of package extraction. Repeat the editor, light/dark, template and PDF checks before merging the actual application migrations. The original application checkouts still use their workspace dependencies; package publication does not migrate or deploy them. No consumer update PRs are created by this release workflow.

@@ -1,6 +1,6 @@
 {
   "name": "@magic-resume-kit/mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Local MCP server and CLI for schema-aware access to the Magic Resume API.",
   "license": "MIT",
   "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/mcp",

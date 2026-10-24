@@ -26,3 +26,9 @@ composition.
 
 `apps/web/src/components/ui` is the Web behaviour-adapter boundary; new shared
 visual primitives should import from this package directly.
+
+## Public distribution
+
+Install `@magic-resume-kit/design-system` from the public [npm registry](https://www.npmjs.com/package/@magic-resume-kit/design-system). No GitHub Packages token or private registry configuration is required. The package source and release workflow live in [Magic Resume Kit](https://github.com/Magic-Resume/magic-resume-kit).
+
+See the [consumer integration guide](https://github.com/Magic-Resume/magic-resume-kit/blob/main/docs/consumer-migration.md) for host requirements and the [release guide](https://github.com/Magic-Resume/magic-resume-kit/blob/main/docs/releasing.md) for versioning and publication.
