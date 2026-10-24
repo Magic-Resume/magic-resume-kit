@@ -14,49 +14,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v4
-      # setup-node v4 caches only when explicitly requested; release builds use no cache.
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11.21.1
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm check:packages
       - run: pnpm test:consumer
-      - name: Release bot token
-        id: bot
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ vars.RELEASE_BOT_APP_ID }}
-          private-key: ${{ secrets.RELEASE_BOT_PRIVATE_KEY }}
-          owner: Magic-Resume
-          repositories: |
-            magic-resume-kit
-            Magic-Resume
-            Magic-Resume-Commercial
-      - name: Version or publish packages
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: pnpm version-packages
-          publish: pnpm publish-packages
+      - name: Publish verified archives
+        run: pnpm publish-packages
         env:
-          GITHUB_TOKEN: ${{ steps.bot.outputs.token }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-      - name: Notify application repositories
-        if: steps.changesets.outputs.published == 'true'
-        env:
-          GH_TOKEN: ${{ steps.bot.outputs.token }}
-          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
-        run: node scripts/dispatch-release.mjs
+      - name: Verify anonymous registry installation
+        run: pnpm test:published
+      - uses: actions/upload-artifact@v4
+        with:
+          name: released-packages
+          path: .artifacts/*.tgz

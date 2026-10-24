@@ -1,22 +1,19 @@
 # Publishing Magic Resume Kit
 
-Six packages start at 1.0.0 under `@magic-resume-kit` on npmjs. Source code belongs in the public `Magic-Resume/magic-resume-kit` GitHub repository. Public npm installations require no token. No release occurs until the repository variable `PUBLIC_PACKAGES_PUBLISH_ENABLED` is set to `true`.
+Six public packages start at 1.0.0 under `@magic-resume-kit` on npmjs. The source repository is `Magic-Resume/magic-resume-kit`. The release workflow is gated by `PUBLIC_PACKAGES_PUBLISH_ENABLED=true` and runs only on `main`, on pushes or manual dispatch.
 
-## First release
+## Release workflow
 
-1. Confirm ownership of the npm organization `magic-resume-kit` and enable account 2FA. Create the public GitHub repository and push the reviewed local branch only when authorized.
-2. Configure `RELEASE_BOT_APP_ID` and `RELEASE_BOT_PRIVATE_KEY` for the release bot. Give it contents and pull-request access to this repository and contents access to both application repositories. It creates version PRs and sends release events.
-3. For the first release, configure a short-lived granular npm token in the GitHub repository secret `NPM_TOKEN` if trusted publishing cannot yet be configured for the new package names. The token must permit direct publishing of the selected scope and satisfy the organization's 2FA policy. No local `npm login` is required for this CI path, and no token belongs in repository files.
-4. Enable the release gate, run CI, review the tarballs, then run the release workflow on `main`. Check that all six exact versions can be installed anonymously from npmjs before migrating application repositories.
-5. For subsequent releases, configure each package's npm Trusted Publisher for organization `Magic-Resume`, repository `magic-resume-kit`, workflow `publish.yml`. Explicitly allow `npm publish`, because stage-only permission does not authorize this workflow's direct publish. Configure this shortly before the next release: npm requires the first successful publish for a new trusted publisher within two days. The workflow uses a GitHub-hosted runner, Node 24 and npm >=11.5.1, with `id-token: write`. Validate an OIDC release and then revoke/remove the bootstrap `NPM_TOKEN`.
+The workflow installs dependencies without a release cache, builds, typechecks, runs the full unit suites, checks the public boundary and archives, and verifies an isolated installation. It publishes the exact checked archives using npm 11.21.1, then verifies anonymous installation from the registry, including a separate MCP-only installation. Existing versions are retained, so a partial publication can be safely resumed.
 
+The workflow creates no pull requests and sends no application update events. It needs no GitHub App or cross-repository credentials. Changesets remains the local version/changelog tool: run `pnpm changeset`, then `pnpm version-packages` and commit the resulting versions before release. Pending changesets block publication rather than triggering a version PR. The private tsconfig workspace is never published.
 
-The release workflow runs build, typecheck, tests, public-boundary checks and clean consumer installation before Changesets. Future changes use `pnpm changeset`; a version PR updates affected package versions and changelogs. The private tsconfig package is excluded from publication.
+## First release and authentication
 
-## Consumer updates
+The npm organization owner must have a verified email and enable account 2FA to configure trusted publishing. Packages must exist before a trusted publisher can be configured. Bootstrap the first versions with the logged-in maintainer after CI passes, or use a short-lived scope-limited granular token in the GitHub secret `NPM_TOKEN` if the first release runs in CI. Never commit credentials.
 
-After publishing, the workflow sends `magic-packages-published` events containing exact published names and versions to both application repositories. Consumers must enable their update workflow only after the initial migration. Update PRs target an existing `release-YYYY-MM-DD` branch, never the default branch. Patch/minor updates can use auto-merge after required CI; major updates require review. A weekly and manual fallback can query npmjs for missed versions.
+For each of the six packages, bind npm Trusted Publishing to GitHub organization `Magic-Resume`, repository `magic-resume-kit`, workflow `publish.yml`, and allow direct `npm publish`. The workflow has `id-token: write`, uses a GitHub-hosted runner and requests provenance for CI releases. No environment name is configured. A new binding must complete its first successful publish within two days, so configure it near the next release and recreate an expired binding if needed. Validate an OIDC release before removing any bootstrap token.
 
-Until that initial migration is reviewed, applications keep their current workspace packages. A successful package publish does not authorize an application release or production deployment.
+After the initial publication, verify anonymous package installation with `pnpm test:published`. Publishing packages does not migrate or deploy either application. Consumer update workflow templates stay disabled until a separate migration is authorized.
 
-See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for runner and authentication requirements, and [GitHub npm registry authentication](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry) for why GitHub Packages is not used for anonymous public installation.
+References: [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/), [scoped package publishing](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/).
