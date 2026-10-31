@@ -32,7 +32,7 @@ import type {
   MagicTemplateDSL,
 } from '../types/magic-dsl';
 import type { InfoType, Resume, SectionItem } from '../types/resume';
-import { getPdfFontStack, getPdfRichTextFontFamily } from '../font-family';
+import { getPdfFontStack, getPdfRichTextFontFamily, type PdfFontFamilyAliases } from '../font-family';
 import { PdfHugeIcon, type PdfIconNode } from './PdfHugeIcon';
 import { iconNodeByName } from '../primitives/icons';
 import { PdfRichText } from './PdfRichText';
@@ -86,6 +86,7 @@ export interface MagicResumePdfDocumentProps {
   locale?: string;
   /** 简历含子集字体之外的 CJK 字时，调用方注册全量字体并置位此项；默认用子集字族。 */
   cjkFallback?: boolean;
+  fontFamilies?: PdfFontFamilyAliases;
 }
 
 const SECTION_ICON_MAP: Record<string, PdfIconNode> = {
@@ -261,6 +262,7 @@ interface RenderContext {
   showTitleIcon: boolean;
   richTextFontFamily: string;
   cjkFallback: boolean;
+  fontFamilies?: PdfFontFamilyAliases;
   locale?: string;
 }
 
@@ -742,7 +744,7 @@ const DefaultSectionBlock = ({ component, items, context }: {
   const fields = component.fieldMap ?? {};
   const bodyFontSize = cssSizeToPoints(context.typography.fontSize.sm, 9);
   const fieldWeight = context.typography.fontWeight.medium ?? 500;
-  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback);
+  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback, context.fontFamilies);
   return (
     <View style={toPdfComponentStyle(component.style)}>
       <SectionTitle title={resolveTitle(component, context)} icon={getSectionIcon(component)} context={context} />
@@ -793,7 +795,7 @@ const ListSectionBlock = ({ component, items, context }: {
   const fields = component.fieldMap ?? {};
   const bodyFontSize = cssSizeToPoints(context.typography.fontSize.sm, 9);
   const fieldWeight = context.typography.fontWeight.medium ?? 500;
-  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback);
+  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback, context.fontFamilies);
   return (
     <View style={toPdfComponentStyle(component.style)}>
       <SectionTitle title={resolveTitle(component, context)} icon={getSectionIcon(component)} context={context} />
@@ -1033,7 +1035,7 @@ const TimelineBlock = ({ component, items, context }: {
 }) => {
   const fields = component.fieldMap ?? {};
   const color = component.style?.color ?? context.colors.text;
-  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback);
+  const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback, context.fontFamilies);
   return (
     <View style={[toPdfComponentStyle(component.style), { flexShrink: 1, maxWidth: '100%', minWidth: 0 }]}>
       <SectionTitle
@@ -1128,7 +1130,7 @@ const ComponentBlock = ({ component, data, sidebar, context }: {
   return <DefaultSectionBlock component={component} items={items} context={context} />;
 };
 
-export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale, cjkFallback = false }: MagicResumePdfDocumentProps) => {
+export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale, cjkFallback = false, fontFamilies }: MagicResumePdfDocumentProps) => {
   const locale = normalizeDocumentLanguage(data.documentLanguage) ?? normalizeDocumentLanguage(requestedLocale) ?? resolveDocumentLanguage(data);
   // 整棵模板树接管：与 HTML 渲染器**同一个判断、同一个编译入口**。
   // 只改一边就是又造一对孪生实现——`summary`/`awards` 那次事故就是这么来的。
@@ -1144,6 +1146,7 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
       fontFamily: getPdfRichTextFontFamily(
         template.designTokens.typography.fontFamily.primary,
         cjkFallback,
+        fontFamilies,
       ),
       width: cssSizeToPoints(template.layout.containerWidth, FREE_FORM_PAGE_SIZE.width),
     });
@@ -1164,8 +1167,9 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
     spacing,
     showTitleDivider: template.layout.showTitleDivider !== false,
     showTitleIcon: template.layout.showTitleIcon !== false,
-    richTextFontFamily: getPdfRichTextFontFamily(typography.fontFamily.primary, cjkFallback),
+    richTextFontFamily: getPdfRichTextFontFamily(typography.fontFamily.primary, cjkFallback, fontFamilies),
     cjkFallback,
+    fontFamilies,
     locale,
   };
   const sorted = sortComponents(template, data);
@@ -1175,7 +1179,7 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
   const baseStyle: Style = {
     backgroundColor: colors.background,
     color: colors.text,
-    fontFamily: getPdfFontStack(typography.fontFamily.primary, cjkFallback) as unknown as string,
+    fontFamily: getPdfFontStack(typography.fontFamily.primary, cjkFallback, fontFamilies) as unknown as string,
     fontSize: cssSizeToPoints(typography.fontSize.sm, 9),
     lineHeight,
     // 字距:HTML 渲染器一直消费,PDF 之前漏读 → 编辑器主画布(PDF)里字距滑杆无效。
