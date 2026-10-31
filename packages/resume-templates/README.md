@@ -26,6 +26,8 @@ The host serves subset `.woff2` files at `/fonts/` and matching full `.woff` fil
 
 Required families and filenames are defined in `src/pdf/browser.tsx`: SourceHanSansSC and SourceHanSerifSC Regular, Bold, RegularOblique and BoldOblique; LXGWWenKai Regular and Medium; GlowSansSC, SarasaGothicSC, ChironHeiHK, ChironSungHK and MapleMonoCN Regular and Bold; LXGWBrightGB Regular and Medium; ZhuqueFangsong, LXGWZhenKaiGB, QiushuiShotai and LXGWMarkerGothic Regular. Full fallback families use the existing full-font mapping. The packaged renderer retains same-origin `/api/pdf/logo-image` handling for versioned R2 logos; hosts using those logo URLs must supply that endpoint.
 
+Hosts can avoid downloading whole CJK fonts by passing an optional `resolveFont(sourceUrl, characters)` callback to `createMagicResumePdfBlob`. It receives a sorted unique character set, including decoded rich text and localized labels. Return a URL or font data URL containing those glyphs from the original font, preserving outlines, metrics, shaping features and license records. Fonts and the subsetting service remain the host's responsibility; no service is contacted by default. A failed resolver falls back to the existing static source. Subsets use distinct font-family aliases so later edits can introduce new characters safely; inactive font profiles are bounded and active renders retain their fonts.
+
 ## PDF dependency patches
 
 Synthetic bold rendering uses three upstream patches shipped under `patches/`. Package-manager patches are not inherited from a dependency. Copy these files into the host's `patches/` directory and keep these entries in its `pnpm-workspace.yaml`:

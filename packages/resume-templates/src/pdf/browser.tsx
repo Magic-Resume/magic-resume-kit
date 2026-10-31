@@ -17,11 +17,15 @@ import { magicPdfHyphenationCallback } from './hyphenation';
 import { MagicResumePdfDocument } from './MagicResumePdfDocument';
 import { prepareBoundImageFields, prepareTemplateImages } from './prepareImages';
 import { pdfImageFetchSource } from './imageFetchSource';
+import { collectPdfFontCharacters, resolvePdfFontProfile, FontProfileRegistry, type PdfFontProfile, type PdfFontResolver } from './fontAssets';
+export type { PdfFontResolver } from './fontAssets';
 
 export interface CreateMagicResumePdfBlobOptions {
   data: Resume;
   template: MagicTemplateDSL;
   locale?: string;
+  /** Optional host-provided glyph subsetting. Defaults to the existing static font files. */
+  resolveFont?: PdfFontResolver;
 }
 
 type PdfFontCategory = ReturnType<typeof getResumeFontCategory>;
@@ -304,15 +308,17 @@ const registerFontConfig = (
   config: PdfFontConfig,
   urlOf: (variant: PdfFontVariant) => string,
   includeItalic: boolean,
+  profile?: PdfFontProfile,
 ) => {
   for (const variant of selectFontVariants(config, { includeItalic })) {
     const fontStyle = variant.fontStyle ?? 'normal';
-    const key = `${variant.family}:${variant.fontWeight}:${fontStyle}`;
+    const family = profile?.families[variant.family] ?? variant.family;
+    const key = `${family}:${variant.fontWeight}:${fontStyle}`;
     if (registeredFontVariants.has(key)) continue;
 
     Font.register({
-      family: variant.family,
-      src: urlOf(variant),
+      family,
+      src: profile?.sources.get(urlOf(variant)) ?? urlOf(variant),
       fontWeight: variant.fontWeight,
       fontStyle,
     });
@@ -320,29 +326,39 @@ const registerFontConfig = (
   }
 };
 
-const registerFonts = (template?: MagicTemplateDSL, data?: Resume) => {
+const fontProfiles = new FontProfileRegistry(8, profile => {
+  const fonts = Font.getRegisteredFonts();
+  for (const family of Object.values(profile.families)) {
+    delete fonts[family];
+    for (const key of registeredFontVariants) {
+      if (key.startsWith(`${family}:`)) registeredFontVariants.delete(key);
+    }
+  }
+});
+
+const prepareFonts = async (
+  template: MagicTemplateDSL, data: Resume, locale: string | undefined, resolveFont?: PdfFontResolver,
+) => {
   ensureHyphenationRegistered();
   const category = getTemplateFontCategory(template);
-  const italic = hasItalicText(data);
-  registerFontConfig(pdfFontManifest[category], fontVariantUrl, italic);
-
-  // 缺字兜底档也要注册:getPdfFontStack 会把它的 family 名排进字体栈,没注册过
-  // 那个名字就解析不到任何字体,兜底等于没有。
-  const gap = getResumeFontGapFallback(category);
-  if (gap) registerFontConfig(pdfFontManifest[gap], fontVariantUrl, italic);
-};
-
-// Register the full CJK fonts (public/fonts/full/) under their own family so a
-// resume with rare ideographs renders them instead of tofu. Called only when
-// resumeNeedsFullCjkFonts() found such a glyph — otherwise the 13–16MB files are
-// never fetched, preserving the subset first-paint win.
-const registerFullCjkFonts = (template?: MagicTemplateDSL, data?: Resume) => {
-  ensureHyphenationRegistered();
-  registerFontConfig(
-    pdfFullFontManifest[getTemplateFontCategory(template)],
-    fullFontVariantUrl,
-    hasItalicText(data),
+  const includeItalic = hasItalicText(data);
+  const characters = resolveFont ? collectPdfFontCharacters(data, template, locale) : '';
+  const cjkFallback = resumeNeedsFullCjkFonts(resolveFont ? characters : data);
+  const configs: Array<{ config: PdfFontConfig; urlOf: typeof fontVariantUrl }> = [];
+  if (cjkFallback) {
+    configs.push({ config: pdfFullFontManifest[category], urlOf: fullFontVariantUrl });
+  } else {
+    configs.push({ config: pdfFontManifest[category], urlOf: fontVariantUrl });
+    const gap = getResumeFontGapFallback(category);
+    if (gap) configs.push({ config: pdfFontManifest[gap], urlOf: fontVariantUrl });
+  }
+  const fonts = configs.flatMap(({ config, urlOf }) =>
+    selectFontVariants(config, { includeItalic }).map(variant => ({ family: variant.family, source: urlOf(variant) })),
   );
+  const profile = resolveFont ? await resolvePdfFontProfile(fonts, characters, resolveFont) : undefined;
+  const release = profile ? fontProfiles.retain(profile) : () => {};
+  for (const { config, urlOf } of configs) registerFontConfig(config, urlOf, includeItalic, profile);
+  return { cjkFallback, profile, release };
 };
 
 const prefetchFont = async (url: string) => {
@@ -719,19 +735,22 @@ export const createMagicResumePdfBlob = async ({
   data,
   template,
   locale,
+  resolveFont,
 }: CreateMagicResumePdfBlobOptions): Promise<Blob> => {
-  registerFonts(template, data);
-  const cjkFallback = resumeNeedsFullCjkFonts(data);
-  if (cjkFallback) registerFullCjkFonts(template, data);
-  const preparedData = await prepareResumeImages(data);
-  const document = (
-    <MagicResumePdfDocument
-      data={preparedData}
-      template={template}
-      locale={locale}
-      cjkFallback={cjkFallback}
-    />
-  );
-
-  return pdf(document).toBlob();
+  const { cjkFallback, profile, release } = await prepareFonts(template, data, locale, resolveFont);
+  try {
+    const preparedData = await prepareResumeImages(data);
+    const document = (
+      <MagicResumePdfDocument
+        data={preparedData}
+        template={template}
+        locale={locale}
+        cjkFallback={cjkFallback}
+        fontFamilies={profile?.families}
+      />
+    );
+    return await pdf(document).toBlob();
+  } finally {
+    release();
+  }
 };

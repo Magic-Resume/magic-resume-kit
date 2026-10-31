@@ -180,22 +180,26 @@ export const getResumeFontGapFallback = (
 export const getCategorySubsetFamily = (category: ResumeFontCategory): string =>
   CJK_FAMILY[category].subset;
 
-export const getPdfCjkFamily = (fontStack: string, preferFull = false): string => {
+export type PdfFontFamilyAliases = Readonly<Record<string, string>>;
+
+export const getPdfCjkFamily = (fontStack: string, preferFull = false, aliases: PdfFontFamilyAliases = {}): string => {
   const config = CJK_FAMILY[getResumeFontCategory(fontStack)];
-  return preferFull ? config.full : config.subset;
+  const family = preferFull ? config.full : config.subset;
+  return aliases[family] ?? family;
 };
 
-export const getPdfFontStack = (fontStack: string, preferFull = false): string[] => {
+export const getPdfFontStack = (fontStack: string, preferFull = false, aliases: PdfFontFamilyAliases = {}): string[] => {
   const config = CJK_FAMILY[getResumeFontCategory(fontStack)];
   const primary = preferFull ? config.full : config.subset;
   // 缺字兜底排在拉丁兜底之前:先试同为 CJK 的思源,再落到 PDF 标准拉丁字体。
-  return config.gapFallback && !preferFull
+  const stack = config.gapFallback && !preferFull
     ? [primary, CJK_FAMILY[config.gapFallback].subset, config.latinFallback]
     : [primary, config.latinFallback];
+  return stack.map(family => aliases[family] ?? family);
 };
 
-export const getPdfRichTextFontFamily = (fontStack: string, preferFull = false): string =>
-  getPdfCjkFamily(fontStack, preferFull);
+export const getPdfRichTextFontFamily = (fontStack: string, preferFull = false, aliases: PdfFontFamilyAliases = {}): string =>
+  getPdfCjkFamily(fontStack, preferFull, aliases);
 
 export const getWebFontStack = (fontStack: string): string => {
   const { subset: fallbackFamily, genericFamily } = CJK_FAMILY[getResumeFontCategory(fontStack)];
