@@ -1,4 +1,4 @@
-# Magic Resume design system
+# Kenmet design system
 
 The design system is the shared visual contract for `apps/web`, `apps/landing`,
 and workspace UI packages. It intentionally owns tokens, recipes, and small

@@ -1,6 +1,6 @@
 {
   "name": "@magic-resume-kit/utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -30,7 +30,7 @@
     "@types/node": "^20.19.41",
     "typescript": "^5"
   },
-  "description": "Shared formatting, color, motion and class-name utilities for Magic Resume.",
+  "description": "Shared formatting, color, motion and class-name utilities for Kenmet (知遇).",
   "license": "MIT",
   "repository": {
     "type": "git",

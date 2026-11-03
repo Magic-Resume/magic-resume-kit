@@ -40,7 +40,7 @@ async function handleConfigSet(args: string[]): Promise<void> {
     defaultResumeId,
   });
 
-  console.log('Magic Resume MCP config saved.');
+  console.log('Kenmet MCP config saved.');
 }
 
 async function handleConfigPrint(): Promise<void> {
@@ -80,7 +80,7 @@ function readOption(args: string[], name: string): string | undefined {
 }
 
 function printUsage(): void {
-  console.log('Magic Resume CLI');
+  console.log('Kenmet CLI');
   console.log('Usage:');
   console.log('  magic-resume config set --api-url <url> --pat <token> [--default-resume-id <id>]');
   console.log('  magic-resume config print   show the saved config (PAT masked)');

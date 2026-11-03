@@ -21,3 +21,7 @@ The initial 1.0.0 archives were published by the maintainer after CI verificatio
 After the initial publication, verify anonymous package installation with `pnpm test:published`. Publishing packages does not migrate or deploy either application. Consumer update workflow templates stay disabled until a separate migration is authorized.
 
 References: [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/), [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/), [scoped package publishing](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/).
+
+## Official MCP Registry
+
+`packages/mcp/server.json` lists `@magic-resume-kit/mcp` in the [official MCP Registry](https://registry.modelcontextprotocol.io/) as `io.github.Magic-Resume/magic-resume`, which must equal `mcpName` in `packages/mcp/package.json`. The registry checks that name against the published npm archive, so publish to npm first. After each MCP release, set both `version` fields in `server.json` to the released version, then run `mcp-publisher login github` (as a member of the Magic-Resume organization) and `mcp-publisher publish` from `packages/mcp`. Verify with `https://registry.modelcontextprotocol.io/v0/servers?search=magic-resume`.

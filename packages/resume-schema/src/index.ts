@@ -287,7 +287,7 @@ export const sampleResume = {
       {
         id: 'sample-project-1',
         visible: true,
-        name: 'Magic Resume MCP',
+        name: 'Kenmet MCP',
         description:
           '<p>Connected resume data to AI coding tools through schema-aware JSON Patch operations.</p>',
       },
@@ -306,7 +306,7 @@ export const sampleResume = {
 export const resumeJsonSchema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
   $id: 'https://magic-resume.cn/schema/resume.schema.json',
-  title: 'Magic Resume',
+  title: 'Kenmet resume',
   type: 'object',
   additionalProperties: true,
   required: [

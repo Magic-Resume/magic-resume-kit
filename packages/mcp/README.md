@@ -1,6 +1,6 @@
 # @magic-resume-kit/mcp
 
-Local stdio MCP server and CLI for reading resumes and applying schema-aware patches through the Magic Resume API. It uses personal access tokens and requires a compatible API; it does not read the local editor's IndexedDB.
+Local stdio MCP server and CLI for reading resumes and applying schema-aware patches through the Kenmet (formerly Magic Resume) API. It uses personal access tokens and requires a compatible API; it does not read the local editor's IndexedDB.
 
 ```sh
 npx -y @magic-resume-kit/mcp --help

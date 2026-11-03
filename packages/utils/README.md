@@ -1,6 +1,6 @@
 # @magic-resume-kit/utils
 
-Shared formatting, color, motion and class-name utilities for Magic Resume.
+Shared formatting, color, motion and class-name utilities for Kenmet (知遇).
 
 ```sh
 npm install @magic-resume-kit/utils

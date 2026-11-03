@@ -61,7 +61,7 @@ const condition = () => ({
 export const templateJsonSchema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
   $id: 'https://magic-resume.dev/schemas/template-document.json',
-  title: 'Magic Resume 模板文档',
+  title: '知遇模板文档',
   type: 'object',
   required: ['version', 'root'],
   additionalProperties: false,

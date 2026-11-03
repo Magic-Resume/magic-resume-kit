@@ -1,7 +1,7 @@
 {
   "name": "@magic-resume-kit/mcp",
-  "version": "1.0.1",
-  "description": "Local MCP server and CLI for schema-aware access to the Magic Resume API.",
+  "version": "1.0.2",
+  "description": "Local MCP server and CLI for schema-aware access to the Kenmet API.",
   "license": "MIT",
   "homepage": "https://github.com/Magic-Resume/magic-resume-kit/tree/main/packages/mcp",
   "repository": {

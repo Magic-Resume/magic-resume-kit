@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Magic-Resume/magic-resume",
+  "title": "Kenmet",
+  "description": "Read and edit Kenmet (formerly Magic Resume) resumes from Claude Code, Cursor or any MCP client with safe patches.",
+  "websiteUrl": "https://www.magic-resume.cn",
+  "repository": {
+    "url": "https://github.com/Magic-Resume/magic-resume-kit",
+    "source": "github",
+    "id": "1432421993",
+    "subfolder": "packages/mcp"
+  },
+  "version": "1.0.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@magic-resume-kit/mcp",
+      "version": "1.0.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "@magic-resume-kit/icons",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -34,7 +34,7 @@
     "@types/react": "^19.1.6",
     "typescript": "^5"
   },
-  "description": "React icons used by Magic Resume.",
+  "description": "React icons used by Kenmet (知遇).",
   "license": "MIT",
   "repository": {
     "type": "git",
