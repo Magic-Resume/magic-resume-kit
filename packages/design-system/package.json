@@ -1,6 +1,6 @@
 {
   "name": "@magic-resume-kit/design-system",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -52,7 +52,7 @@
     "@types/react": "^19.1.6",
     "typescript": "^5"
   },
-  "description": "Semantic design tokens, Tailwind styles and React primitives for Magic Resume.",
+  "description": "Semantic design tokens, Tailwind styles and React primitives for Kenmet (知遇).",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -161,7 +161,7 @@ export function resolveResumeId(inputResumeId?: string, defaultResumeId?: string
 
 export function buildResumeSchemaGuide() {
   return {
-    schemaName: 'Magic Resume structured resume content',
+    schemaName: 'Kenmet structured resume content',
     rootFields: {
       id: 'optional string, cloud resume id',
       name: 'resume display name',

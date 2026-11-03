@@ -1,6 +1,6 @@
 # @magic-resume-kit/icons
 
-React icons used by Magic Resume.
+React icons used by Kenmet (知遇).
 
 ```sh
 npm install @magic-resume-kit/icons

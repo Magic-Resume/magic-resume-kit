@@ -1207,9 +1207,9 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
   return (
     <Document
       author={data.info.fullName}
-      creator="Magic Resume"
+      creator="Kenmet"
       language={locale ?? 'zh-CN'}
-      producer="Magic Resume"
+      producer="Kenmet"
       subject={data.info.headline}
       title={data.name || data.info.fullName}
     >

@@ -24,7 +24,7 @@ export function createApiClient(options: MagicResumeApiClientOptions): MagicResu
 
     if (!response.ok) {
       const body = await response.text().catch(() => '');
-      throw new Error(`Magic Resume API request failed: ${response.status} ${response.statusText}${body ? ` - ${body}` : ''}`);
+      throw new Error(`Kenmet API request failed: ${response.status} ${response.statusText}${body ? ` - ${body}` : ''}`);
     }
 
     return response.json();

@@ -1,6 +1,6 @@
 # Magic Resume Kit
 
-Magic Resume Kit contains the shared MIT packages used by the Magic Resume applications. Packages use the `@magic-resume-kit` namespace on npmjs so public installations do not require a GitHub Packages token. All six packages are available on npmjs, starting at 1.0.0. [GitHub releases](https://github.com/Magic-Resume/magic-resume-kit/releases) record published versions and CI verification.
+Magic Resume Kit contains the shared MIT packages used by the Kenmet (知遇, formerly Magic Resume) applications. Packages use the `@magic-resume-kit` namespace on npmjs so public installations do not require a GitHub Packages token. All six packages are available on npmjs, starting at 1.0.0. [GitHub releases](https://github.com/Magic-Resume/magic-resume-kit/releases) record published versions and CI verification.
 
 | Package | Purpose |
 | --- | --- |
