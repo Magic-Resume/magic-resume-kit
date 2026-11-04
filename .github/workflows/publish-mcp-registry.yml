@@ -1,0 +1,42 @@
+name: Publish MCP Registry entry
+# Lists packages/mcp/server.json in the official MCP Registry. The server name
+# sits in the Magic-Resume organization namespace, which the interactive
+# `mcp-publisher login github` flow cannot prove (it cannot read org roles);
+# GitHub OIDC from this repository can. Run it after the npm release of the
+# version server.json names, because the registry checks the npm archive.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mcp-registry
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PUBLISHER_VERSION: 1.8.7
+      PUBLISHER_SHA256: 00b21004149a4ce66f0782508ae4a2bce67d1bea395a8da0bd8028159fb59579
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install mcp-publisher
+        run: |
+          archive=mcp-publisher_linux_amd64.tar.gz
+          curl --fail --silent --show-error --location --retry 3 -o "$archive" \
+            "https://github.com/modelcontextprotocol/registry/releases/download/v${PUBLISHER_VERSION}/${archive}"
+          echo "${PUBLISHER_SHA256}  ${archive}" | sha256sum --check
+          tar -xzf "$archive" mcp-publisher
+      - name: Check that npm already has the listed version
+        run: |
+          version="$(node -p "require('./packages/mcp/server.json').version")"
+          npm view "@magic-resume-kit/mcp@${version}" version
+      - run: ./mcp-publisher login github-oidc
+      - run: ../../mcp-publisher publish
+        working-directory: packages/mcp
