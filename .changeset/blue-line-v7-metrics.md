@@ -1,0 +1,5 @@
+---
+"@magic-resume-kit/resume-templates": patch
+---
+
+Align Blue Line with the compact delivery sheet: 13.3px body at 1.3 line height, 25px role, 18px section rules, tighter page and section spacing, and a gray experience title bar.

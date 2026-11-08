@@ -8,21 +8,22 @@ const sections: Array<[BlueLineSectionKey, string]> = [
 
 export const blueLineTemplate: MagicTemplateDSL = {
   id: 'blue-line', name: 'Blue Line', version: '1.0.0',
-  description: 'Single-column resume with blue section dividers, a prominent role heading, and crisp, readable typography.',
+  description: 'Single-column resume with blue section dividers, a prominent role heading, and compact delivery typography.',
   thumbnailUrl: '/templates/jpg/blue-line.jpg',
   tags: ['single-column', 'professional', 'minimal', 'blue', 'ats-friendly'],
-  status: 'PUBLISHED', createdAt: '2026-10-16T00:00:00.000Z', updatedAt: '2026-10-16T00:00:00.000Z',
+  status: 'PUBLISHED', createdAt: '2026-10-16T00:00:00.000Z', updatedAt: '2026-11-09T00:00:00.000Z',
   designTokens: {
-    colors: { primary: '#0879ee', secondary: '#080808', text: '#3f3f46', textSecondary: '#52525b', background: '#ffffff', border: '#0879ee' },
+    // V7 delivery sheet: near-black body, deeper blue rules, tight leading.
+    colors: { primary: '#2458b8', secondary: '#292929', text: '#20252b', textSecondary: '#20252b', background: '#ffffff', border: '#2458b8' },
     typography: {
-      fontFamily: { primary: 'Source Han Sans SC' },
-      fontSize: { xs: '12px', sm: '13.2px', md: '14.4px', lg: '21px', xl: '24px', xxl: '30px' },
-      fontWeight: { normal: 400, medium: 400, bold: 700 }, lineHeight: 1.65, letterSpacing: '0px',
+      fontFamily: { primary: 'Arial, "Hiragino Sans GB", "Microsoft YaHei", sans-serif' },
+      fontSize: { xs: '12px', sm: '13.3px', md: '14px', lg: '18px', xl: '22px', xxl: '25px' },
+      fontWeight: { normal: 400, medium: 400, bold: 700 }, lineHeight: 1.3, letterSpacing: '0px',
     },
-    spacing: { xs: '3px', sm: '8px', md: '13px', lg: '20px', xl: '24px' },
-    borderRadius: { none: '0', sm: '0', md: '0', lg: '0' },
+    spacing: { xs: '6px', sm: '5px', md: '7px', lg: '20px', xl: '12px' },
+    borderRadius: { none: '0', sm: '2px', md: '0', lg: '0' },
   },
-  layout: { type: 'single-column', pageSize: 'A4', containerWidth: '794px', padding: '44px', gap: '20px', showTitleDivider: true, showTitleIcon: false },
+  layout: { type: 'single-column', pageSize: 'A4', containerWidth: '794px', padding: '38px 45px 42px', gap: '12px', showTitleDivider: true, showTitleIcon: false },
   components: [
     { id: 'header', type: 'Tree', dataBinding: 'info', position: { area: 'main' }, tree: blueLineHeaderPreset() },
     ...sections.map(([key, title]) => ({

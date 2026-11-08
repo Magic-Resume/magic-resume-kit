@@ -23,6 +23,23 @@ const resume = {
   documentLanguage: 'zh',
 } as unknown as Resume;
 
+test('blue-line uses the compact delivery metrics on the page', () => {
+  const template = getTemplateById('blue-line');
+  assert.equal(template.designTokens.typography.fontSize.sm, '13.3px');
+  assert.equal(template.designTokens.typography.lineHeight, 1.3);
+  assert.equal(template.layout.padding, '38px 45px 42px');
+  const html = renderToStaticMarkup(<MagicResumeRenderer template={template} data={resume} />);
+  const pdf = renderToStaticMarkup(MagicResumePdfDocument({ template, data: resume }));
+  assert.match(html, /padding:38px 45px 42px/);
+  assert.match(html, /font-size:25px/);
+  assert.match(html, /#f2f3f5/);
+  assert.match(html, /Arial, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, sans-serif|Arial, "Hiragino Sans GB", "Microsoft YaHei", sans-serif/);
+  assert.match(pdf, /padding-top:28\.5/);
+  assert.match(pdf, /padding-right:33\.75/);
+  assert.match(pdf, /padding-bottom:31\.5/);
+  assert.match(pdf, /padding-left:33\.75/);
+});
+
 test('blue-line is accepted by the shared schema and exposed by the registry', () => {
   assert.equal(templateSchema.safeParse('blue-line').success, true);
   assert.equal(getTemplateById('blue-line').id, 'blue-line');

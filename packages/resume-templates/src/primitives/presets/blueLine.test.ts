@@ -26,7 +26,13 @@ test('Blue Line has separate data-bound trees for every standard section', () =>
   assert.equal(blueLineTemplate.id, 'blue-line');
   assert.equal(blueLineTemplate.status, 'PUBLISHED');
   assert.equal(blueLineTemplate.layout.containerWidth, '794px');
-  assert.equal(blueLineTemplate.designTokens.colors.primary, '#0879ee');
+  assert.equal(blueLineTemplate.designTokens.colors.primary, '#2458b8');
+  assert.equal(blueLineTemplate.designTokens.colors.text, '#20252b');
+  assert.equal(blueLineTemplate.designTokens.typography.fontFamily.primary, 'Arial, "Hiragino Sans GB", "Microsoft YaHei", sans-serif');
+  assert.equal(blueLineTemplate.designTokens.typography.lineHeight, 1.3);
+  assert.equal(blueLineTemplate.designTokens.typography.fontSize.xxl, '25px');
+  assert.equal(blueLineTemplate.layout.padding, '38px 45px 42px');
+  assert.equal(blueLineTemplate.layout.gap, '12px');
   assert.deepEqual(blueLineTemplate.components.map((item) => item.dataBinding), [
     'info', 'sections.education', 'sections.skills', 'sections.experience', 'sections.projects', 'sections.openSource',
     'sections.summary', 'sections.personalEvaluation', 'sections.profiles', 'sections.languages', 'sections.awards', 'sections.certificates',
@@ -34,9 +40,9 @@ test('Blue Line has separate data-bound trees for every standard section', () =>
 });
 
 test('Blue Line responds to the heading and body font controls used by TemplatePanel', () => {
-  assert.equal(blueLineTemplate.designTokens.typography.fontSize.lg, '21px');
-  assert.equal(blueLineTemplate.designTokens.typography.fontSize.sm, '13.2px');
-  assert.equal(blueLineTemplate.designTokens.typography.fontSize.md, '14.4px');
+  assert.equal(blueLineTemplate.designTokens.typography.fontSize.lg, '18px');
+  assert.equal(blueLineTemplate.designTokens.typography.fontSize.sm, '13.3px');
+  assert.equal(blueLineTemplate.designTokens.typography.fontSize.md, '14px');
   const template = structuredClone(blueLineTemplate);
   template.designTokens.typography.fontSize.lg = '24px';
   template.designTokens.typography.fontSize.sm = '18px';
@@ -68,6 +74,7 @@ test('Blue Line header uses the target role, links, and custom contacts with a n
   for (const node of nodes.filter((item) => item.href || item.type === 'Icon')) {
     assert.equal(node.style.color, 'var(--color-text-secondary)', `${node.templateNodeId}: explicit contact color`);
     if (node.href) assert.equal(node.style.textDecoration, 'none');
+    if (node.type === 'Icon') assert.equal(node.style.marginTop, -6, `${node.templateNodeId}: optical vertical alignment`);
   }
   const fallback = compileComponent('info', { ...data, info: { fullName: '陈予安' } });
   assert.equal(fallback.filter((node) => node.type === 'Text').find((node) => node.role === 'title')?.text, '陈予安');
@@ -128,4 +135,36 @@ test('Blue Line supplements all sections using the product fields and binds opti
       assert.ok(nodes.some((node) => node.type === 'Text' && node.text === value), `${key}.${field}: ${value}`);
     }
   }
+});
+
+test('Blue Line skill bullets do not fall back to the resume title', () => {
+  const nodes = compileComponent('sections.skills', {
+    name: '江旭', info: {}, sectionOrder: [],
+    sections: { skills: [{ id: 'sk', visible: true, summary: '<ul><li>事件循环</li></ul>' }] },
+  });
+  assert.equal(nodes.some((node) => node.type === 'Text' && node.text === '江旭'), false);
+  assert.ok(nodes.some((node) => node.type === 'RichText' && node.html.includes('事件循环')));
+});
+
+test('Blue Line experience uses the delivery title bar and optional groups', () => {
+  const nodes = compileComponent('sections.experience', {
+    info: {}, sectionOrder: [], sections: { experience: [{
+      id: 'exp', company: '字节跳动', position: '大前端研发实习生', date: '2026.04 至今',
+      summary: '<p>开发频道首页</p>',
+      groups: [{ title: '抖音月付业务全栈开发', summary: '<ul><li>首屏性能优化</li></ul>' }],
+    }] },
+  });
+  const band = nodes.find((node) => node.type === 'Box' && node.templateNodeId === 'blue-line-experience-title-row');
+  assert.ok(band && band.type === 'Box');
+  assert.equal(band.style.backgroundColor, '#f2f3f5');
+  assert.equal(band.style.borderRadius, 2);
+  assert.equal(band.style.paddingTop, 5);
+  assert.equal(band.style.paddingLeft, 7);
+  const groupTitle = nodes.find((node) => node.type === 'Text' && node.text === '抖音月付业务全栈开发');
+  assert.ok(groupTitle && groupTitle.type === 'Text');
+  assert.equal(groupTitle.style.color, '#254e94');
+  assert.equal(groupTitle.style.fontSize, 'var(--font-size-md)');
+  assert.equal(groupTitle.edit, undefined, 'Nested group titles stay read-only');
+  const groupBody = nodes.find((node) => node.type === 'RichText' && node.html.includes('首屏性能优化'));
+  assert.ok(groupBody);
 });

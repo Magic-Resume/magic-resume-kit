@@ -139,6 +139,18 @@ const cssSizeToPoints = (value: string | number | undefined, fallback = 0): numb
   return parsed * 0.75;
 };
 
+/**
+ * `layout.padding` is a CSS shorthand. A single length stays one `padding` value so
+ * existing templates render exactly as before. Two or more lengths become per-side
+ * padding; `parseFloat` would otherwise keep only the top and apply it to every side.
+ */
+const cssPaddingStyle = (value: string | undefined, fallback: number): Style => {
+  const parts = (value ?? '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) return { padding: cssSizeToPoints(value, fallback) };
+  const [top, right = top, bottom = top, left = right] = parts.map((part) => cssSizeToPoints(part, fallback));
+  return { paddingTop: top, paddingRight: right, paddingBottom: bottom, paddingLeft: left };
+};
+
 const isVisible = (item: SectionItem) => (
   item.visible !== false && item.visible !== ('false' as unknown) && item.visible !== (0 as unknown)
 );
@@ -1246,7 +1258,7 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
         </Page>
       ) : (
         <Page size={pageSize} style={[baseStyle, pageMinHeightStyle]}>
-          <View style={{ padding, gap: sectionGap }}>
+          <View style={{ ...cssPaddingStyle(template.layout.padding, padding), gap: sectionGap }}>
             {main.map((component) => <ComponentBlock key={component.id} component={component} data={data} sidebar={false} context={context} />)}
           </View>
         </Page>
