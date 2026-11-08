@@ -204,6 +204,19 @@ const resolveStyleColor = (styles: Style[], fallback: string): string => {
   return color;
 };
 
+/**
+ * The marker box used to be geometrically centered in the full line box.
+ * Font ascent/descent makes the first line's visible glyphs sit slightly above
+ * that center, so the dot looked low even though flex alignment was correct.
+ */
+export const pdfListMarkerOpticalOffset = (
+  fontSize: number,
+  lineHeight: number,
+): number => {
+  const extraLeading = Math.max(0, lineHeight - 1);
+  return extraLeading === 0 ? 0 : -fontSize * extraLeading / 2;
+};
+
 const createRenderers = (fontSize: number, lineHeight: number, color: string): HtmlRenderers => ({
   p: ({ style, children }) => (
     <Text style={[...safeTextStyles(style), safeTextLayoutStyle]}>{children}</Text>
@@ -255,6 +268,7 @@ const createRenderers = (fontSize: number, lineHeight: number, color: string): H
           flexShrink: 0,
           height: fontSize * lineHeight,
           justifyContent: 'center',
+          marginTop: pdfListMarkerOpticalOffset(fontSize, lineHeight),
           width: markerWidth,
         }}
       >
