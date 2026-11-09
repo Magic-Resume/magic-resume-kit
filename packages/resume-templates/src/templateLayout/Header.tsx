@@ -5,8 +5,10 @@ import { documentLabel } from '@magic-resume-kit/resume-schema';
 import { Editable } from '../renderer/EditableCanvas';
 import { safeHref } from './utils';
 import { sectionIconByName } from '../sectionIcons';
+import { InlineFormattedText } from '../renderer/InlineFormattedText';
+import { compactPresentationStyles, type CompactPresentationProps } from './compactPresentation';
 
-interface Props {
+interface Props extends CompactPresentationProps {
   data: InfoType;
   locale?: string;
   style?: React.CSSProperties;
@@ -39,6 +41,8 @@ export const Header = React.memo(function Header({
   // 自定义基本信息是 Resume 的通用数据，不应只在两个示例模板里可见。
   // 模板仍可显式传 false，给极简版式保留收起的选择。
   showCustomFields = true,
+  presentation,
+  designTokens,
 }: Props) {
   const avatarClassName = avatarRounded
     ? 'rounded-full'
@@ -114,15 +118,17 @@ export const Header = React.memo(function Header({
   }
 
   const customFieldItems = (showCustomFields ? (info.customFields || []) : [])
-    .filter(field => field && field.name?.trim() && field.value?.trim())
+    .filter(field => field && (presentation === 'compact'
+      ? field.name?.trim() || field.value?.trim()
+      : field.name?.trim() && field.value?.trim()))
     .map((field, index) => {
-      const value = field.value.trim();
+      const value = presentation === 'compact' ? field.value?.trim() || '' : field.value.trim();
       const href = safeHref(value) ?? undefined;
       const Icon = sectionIconByName(field.icon);
       return {
         key: field.id || `custom-${index}`,
         custom: true as const,
-        label: field.name.trim(),
+        label: presentation === 'compact' ? field.name?.trim() || '' : field.name.trim(),
         content: value,
         href,
         external: Boolean(href),
@@ -133,6 +139,68 @@ export const Header = React.memo(function Header({
           : {}),
       };
     });
+
+  if (presentation === 'compact') {
+    const compact = compactPresentationStyles(designTokens);
+    type ContactItem = (typeof contactItems)[number] | (typeof customFieldItems)[number];
+    const renderContact = (item: ContactItem) => {
+      const custom = 'custom' in item;
+      const fieldKey = item.key === 'phone' ? 'phoneNumber' : item.key;
+      const content = custom ? <InlineFormattedText value={item.content} /> : (
+        <Editable target={{ sectionKey: 'info', itemId: '', fieldKey, kind: 'text', label: item.label }} text={item.content} />
+      );
+      const icon = item.icon && (custom || contactStyle === 'icon')
+        ? React.cloneElement(item.icon as React.ReactElement<{ className?: string; style?: React.CSSProperties }>, {
+          className: undefined,
+          style: { ...compact.contactIcon, width: custom ? 15 : 17, height: custom ? 15 : 17, color: String(compact.muted.color) },
+        })
+        : null;
+      return (
+        <div key={item.key} style={{ display: 'flex', ...compact.contact, ...compact.muted }}>
+          {icon}
+          {(custom || contactStyle === 'label') && item.label ? (
+            <div style={{ ...compact.contactValue, flexBasis: 'auto', flexGrow: 0, maxWidth: '40%' }}>
+              <span style={compact.contactText}><InlineFormattedText value={`${item.label}：`} /></span>
+            </div>
+          ) : null}
+          <div style={compact.contactValue}>
+            {item.href ? (
+              <a href={item.href} target={item.external ? '_blank' : undefined}
+                rel={item.external ? 'noreferrer noopener nofollow' : undefined}
+                style={{ ...compact.contactText, overflowWrap: 'anywhere' }}>{content}</a>
+            ) : <span style={compact.contactText}>{content}</span>}
+          </div>
+        </div>
+      );
+    };
+    const roleField = info.headline ? 'headline' : 'fullName';
+    const role = (
+      <div style={compact.role}>
+        <Editable target={{ sectionKey: 'info', itemId: '', fieldKey: roleField, kind: 'text', label: documentLabel('yourName', locale) }}
+          text={info.headline || info.fullName || documentLabel('yourName', locale)} />
+      </div>
+    );
+    return (
+      <div className={className} style={{ ...style, display: 'flex', flexDirection: 'column', ...compact.body, ...compact.header, fontFamily: 'var(--font-family-primary)' }}>
+        {avatarNode ? (
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+            {avatarPosition === 'left' && avatarNode}{role}{avatarPosition === 'right' && avatarNode}
+          </div>
+        ) : role}
+        <div style={{ display: 'flex', ...compact.contacts }}>
+          <div style={{ display: 'flex', flexDirection: 'column', flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0 }}>
+            {info.fullName ? <div><Editable target={{ sectionKey: 'info', itemId: '', fieldKey: 'fullName', kind: 'text', label: documentLabel('yourName', locale) }} text={info.fullName} /></div> : null}
+            {contactItems.filter((item) => item.key !== 'website').map(renderContact)}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0 }}>
+            {contactItems.filter((item) => item.key === 'website').map(renderContact)}
+            {customFieldItems.map(renderContact)}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className={`flex items-start justify-between gap-4 ${className || ''}`} 

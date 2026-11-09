@@ -353,6 +353,7 @@ export const MagicResumeRenderer = React.memo(({ template, data, locale: request
             style: component.style,
             position: component.position,
             ...component.props,
+            ...(component.props?.presentation === 'compact' ? { designTokens } : {}),
             title: component.type === "ContactInfo" ? resolveSectionTitle("contact", "Contact", data, locale) : resolvedTitle,
             locale,
             titleIcon: getSectionIcon(

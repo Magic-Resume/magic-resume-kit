@@ -15,6 +15,13 @@ import { compileTreeComponent } from '../primitives/treeComponent';
 import { renderNode as renderTreeNode } from '../primitives/pdf/renderNode';
 import { renderTreeDocument } from '../primitives/pdf/document';
 import { compile } from '../primitives/compile';
+import { LENGTH_KEYS, PX_TO_PT } from '../primitives/style';
+import {
+  compactFields,
+  compactGroups,
+  compactPresentationStyles,
+  type CompactPresentationProps,
+} from '../templateLayout/compactPresentation';
 import {
   Document,
   Image,
@@ -264,6 +271,35 @@ const toPdfComponentStyle = (style?: ComponentStyle): Style => {
   return pdfStyle;
 };
 
+/** Shared component presentation metrics are CSS pixels; react-pdf uses points. */
+const compactPdfStyles = (tokens: MagicTemplateDSL['designTokens']): Record<string, Style> =>
+  Object.fromEntries(Object.entries(compactPresentationStyles(tokens)).map(([name, style]) => [
+    name,
+    Object.fromEntries(Object.entries(style).map(([key, value]) => [
+      key, typeof value === 'number' && LENGTH_KEYS.has(key) ? value * PX_TO_PT : value,
+    ])) as Style,
+  ]));
+
+const CompactCustomFields = ({ fields, styles }: {
+  fields: InfoType['customFields'];
+  styles: Record<string, Style>;
+}) => <>{(Array.isArray(fields) ? fields : []).filter((field) => field?.name || field?.value).map((field, index) => {
+  const icon = iconNodeByName(field.icon ?? '');
+  return (
+    <View key={field.id || index} style={[styles.contact, styles.muted]}>
+      {icon ? <PdfHugeIcon icon={icon} size={15 * PX_TO_PT} color={styles.muted.color as string} style={styles.contactIcon} /> : null}
+      {field.name ? (
+        <View style={[styles.contactValue, { flexBasis: 'auto', flexGrow: 0, maxWidth: '40%' }]}>
+          <Text style={styles.contactText}>{pdfInlineText(`${field.name}：`)}</Text>
+        </View>
+      ) : null}
+      <View style={styles.contactValue}>
+        <ContactText value={field.value ? pdfInlineText(field.value) : ''} href={safeWebsiteUrl(field.value)} style={styles.contactText} />
+      </View>
+    </View>
+  );
+})}</>;
+
 interface RenderContext {
   data: Resume;
   templateStyles: MagicTemplateDSL;
@@ -341,7 +377,7 @@ const SectionTitle = ({ title, icon, sidebar, color, dividerColor, fontSize, con
   );
 };
 
-const ContactText = ({ value, href, style }: { value: string; href?: string; style: PdfStyle }) => {
+const ContactText = ({ value, href, style }: { value: React.ReactNode; href?: string; style: PdfStyle }) => {
   if (!value) return null;
   return href ? <Link src={href} style={style}>{value}</Link> : <Text style={style}>{value}</Text>;
 };
@@ -388,6 +424,7 @@ const HeaderBlock = ({ info, component, context }: {
   context: RenderContext;
 }) => {
   const props = component.props ?? {};
+  const compact = props.presentation === 'compact';
   const avatarPosition = props.avatarPosition === 'right' ? 'right' : 'left';
   const labelContacts = props.contactStyle === 'label';
   const avatarWidth = cssSizeToPoints(Number(props.avatarWidth ?? 40));
@@ -396,11 +433,11 @@ const HeaderBlock = ({ info, component, context }: {
   const contactIconOffsetY = -0.75;
   const contactLineHeight = 1;
   // href 可缺省：`safeWebsiteUrl` 拒绝不可信 URL 时回 undefined，ContactText 渲染成纯文本。
-  const contacts: Array<{ label: string; value: string; href?: string; icon?: PdfIconNode; custom?: boolean }> = [
-    { label: documentLabel('phone', context.locale), value: info.phoneNumber, href: info.phoneNumber ? `tel:${info.phoneNumber}` : '', icon: Phone },
-    { label: documentLabel('email', context.locale), value: info.email, href: info.email ? `mailto:${info.email}` : '', icon: Mail },
-    { label: documentLabel('address', context.locale), value: info.address, href: '', icon: MapPin },
-    { label: documentLabel('website', context.locale), value: info.website, href: safeWebsiteUrl(info.website), icon: Globe },
+  const contacts: Array<{ field?: string; label: string; value: string; href?: string; icon?: PdfIconNode; custom?: boolean }> = [
+    { field: 'phoneNumber', label: documentLabel('phone', context.locale), value: info.phoneNumber, href: info.phoneNumber ? `tel:${info.phoneNumber}` : '', icon: Phone },
+    { field: 'email', label: documentLabel('email', context.locale), value: info.email, href: info.email ? `mailto:${info.email}` : '', icon: Mail },
+    { field: 'address', label: documentLabel('address', context.locale), value: info.address, href: '', icon: MapPin },
+    { field: 'website', label: documentLabel('website', context.locale), value: info.website, href: safeWebsiteUrl(info.website), icon: Globe },
   ].filter((item) => item.value);
 
   if (props.showCustomFields !== false) {
@@ -429,6 +466,40 @@ const HeaderBlock = ({ info, component, context }: {
       }}
     />
   ) : null;
+
+  if (compact) {
+    const styles = compactPdfStyles(context.templateStyles.designTokens);
+    const renderContact = (item: (typeof contacts)[number]) => (
+      <View key={item.field} style={styles.contact}>
+        {item.icon && !labelContacts ? <PdfHugeIcon icon={item.icon} size={17 * PX_TO_PT} color={styles.muted.color as string} style={styles.contactIcon} /> : null}
+        {labelContacts ? <View style={[styles.contactValue, { flexBasis: 'auto', flexGrow: 0, maxWidth: '40%' }]}>
+          <Text style={styles.contactText}>{`${item.label}：`}</Text>
+        </View> : null}
+        <View style={styles.contactValue}>
+          <ContactText value={pdfInlineText(item.value)} href={item.href} style={styles.contactText} />
+        </View>
+      </View>
+    );
+    const column: Style = { flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0 };
+    const role = <Text style={styles.role}>{pdfInlineText(info.headline || info.fullName || documentLabel('yourName', context.locale))}</Text>;
+    return (
+      <View style={[styles.body, styles.header, toPdfComponentStyle(component.style)]}>
+        {avatar ? <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 * PX_TO_PT }}>
+          {avatarPosition === 'left' ? avatar : null}{role}{avatarPosition === 'right' ? avatar : null}
+        </View> : role}
+        <View style={styles.contacts}>
+          <View style={column}>
+            {info.fullName ? <Text>{pdfInlineText(info.fullName)}</Text> : null}
+            {contacts.filter((item) => !item.custom && item.field !== 'website').map(renderContact)}
+          </View>
+          <View style={[column, { alignItems: 'flex-end' }]}>
+            {contacts.filter((item) => item.field === 'website').map(renderContact)}
+            {props.showCustomFields !== false ? <CompactCustomFields fields={info.customFields} styles={styles} /> : null}
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -757,6 +828,84 @@ const DefaultSectionBlock = ({ component, items, context }: {
   const bodyFontSize = cssSizeToPoints(context.typography.fontSize.sm, 9);
   const fieldWeight = context.typography.fontWeight.medium ?? 500;
   const dateFontFamily = getPdfFontStack(context.typography.fontFamily.primary, context.cjkFallback, context.fontFamilies);
+  const props = (component.props ?? {}) as CompactPresentationProps;
+  if (props.presentation === 'compact') {
+    const styles = compactPdfStyles(context.templateStyles.designTokens);
+    // Rich text must use the same converted size as its compact parent; the
+    // legacy parser above intentionally keeps existing templates' measurements.
+    const compactBodyFontSize = Number(styles.body.fontSize);
+    const layout = props.itemLayout ?? 'split';
+    const renderDescription = (value: string) => value ? (
+      <View style={styles.body}>
+        <PdfRichText html={value} color={context.colors.text} fontFamily={context.richTextFontFamily} fontSize={compactBodyFontSize}
+          lineHeight={context.typography.lineHeight} liftListMarker={props.listMarkerAlignment === 'first-line'} />
+      </View>
+    ) : null;
+    const renderField = (record: Record<string, unknown>, slot: string, style?: Style, linked = false) => {
+      const field = compactFields(record, fields as Record<string, string | string[] | undefined>, [slot])[0];
+      if (!field) return null;
+      const href = linked ? safeWebsiteUrl(getFieldValue(record, props.titleLinkField)) : undefined;
+      const resolvedStyle = props.fieldStyles?.[slot] ? styles[props.fieldStyles[slot]] : style;
+      return href
+        ? <Link key={slot} src={href} style={resolvedStyle}>{pdfInlineText(field.value)}</Link>
+        : <Text key={slot} style={resolvedStyle}>{pdfInlineText(field.value)}</Text>;
+    };
+    const titleIcon = context.showTitleIcon ? getSectionIcon(component) : undefined;
+    return (
+      <View style={[styles.body, styles.section, toPdfComponentStyle(component.style)]}>
+        <View style={[styles.heading, !context.showTitleDivider ? { borderBottomWidth: 0 } : {}, titleIcon ? { flexDirection: 'row', alignItems: 'center', gap: 4 } : {}]}>
+          {titleIcon ? <PdfHugeIcon icon={titleIcon} size={Number(styles.headingText.fontSize)} color={context.colors.primary} style={{ flexShrink: 0 }} /> : null}
+          <Text style={styles.headingText}>{resolveTitle(component, context)}</Text>
+        </View>
+        <View style={styles.items}>
+          {items.map((item, index) => {
+            const record = item as Record<string, unknown>;
+            const main = compactFields(record, fields as Record<string, string | string[] | undefined>, layout === 'band' ? ['mainTitle', 'mainSubtitle'] : ['mainTitle', 'mainSubtitle', 'secondarySideSubtitle']);
+            const inline = compactFields(record, fields as Record<string, string | string[] | undefined>, ['mainTitle', 'mainSubtitle', 'secondarySubtitle', 'sideTitle', 'sideSubtitle', 'secondarySideSubtitle']);
+            const hasTitle = main.length > 0 || Boolean(getFieldValue(record, fields.sideTitle));
+            const technology = getFieldValue(record, props.technologyField);
+            return (
+              <View key={item.id || index} style={styles.item}>
+                {layout === 'inline' ? inline.length > 0 ? (
+                  <View style={[styles.row, { gap: (props.fieldGap ?? 13) * PX_TO_PT }]}>
+                    {inline.map(({ slot }, fieldIndex) => <React.Fragment key={slot}>
+                      {fieldIndex > 0 && props.separator ? <Text style={styles.muted}>{props.separator}</Text> : null}
+                      {renderField(record, slot, slot === 'mainSubtitle' ? styles.accent : slot === 'sideTitle' ? styles.date : undefined, slot === 'mainTitle')}
+                    </React.Fragment>)}
+                  </View>
+                ) : null : layout !== 'body' && hasTitle ? (
+                  <View style={layout === 'band' ? styles.band : { ...styles.row, justifyContent: 'space-between' }}>
+                    <View style={[styles.row, layout === 'band' ? styles.title : {}, { flexGrow: 1, flexShrink: 1 }]}>
+                      {main.map((field, fieldIndex) => (
+                        <React.Fragment key={field.slot}>
+                          {fieldIndex > 0 ? <Text style={styles.muted}>{props.separator ?? '·'}</Text> : null}
+                          {renderField(record, field.slot, layout === 'band' ? undefined : field.slot === 'mainTitle' ? styles.title : { ...styles.date, color: context.colors.text }, field.slot === 'mainTitle')}
+                        </React.Fragment>
+                      ))}
+                    </View>
+                    {renderField(record, 'sideTitle', styles.date)}
+                  </View>
+                ) : null}
+                {layout === 'band' ? renderField(record, 'secondarySubtitle', styles.muted) : null}
+                {technology ? <View style={[styles.row, { gap: 0, flexWrap: 'nowrap' }]}>
+                  {props.technologyLabel ? <Text style={{ fontWeight: 700 }}>{props.technologyLabel}</Text> : null}
+                  <Text style={styles.muted}>{pdfInlineText(technology)}</Text>
+                </View> : null}
+                <CompactCustomFields fields={item.customFields} styles={styles} />
+                {renderDescription(getFieldValue(record, fields.description))}
+                {compactGroups(record, props.groupsField).map((group, groupIndex) => (
+                  <View key={groupIndex}>
+                    {getFieldValue(group, 'title') ? <Text style={[styles.groupTitle, { color: props.groupTitleColor ?? context.colors.primary }]}>{pdfInlineText(getFieldValue(group, 'title'))}</Text> : null}
+                    {renderDescription(getFieldValue(group, ['summary', 'description']))}
+                  </View>
+                ))}
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={toPdfComponentStyle(component.style)}>
       <SectionTitle title={resolveTitle(component, context)} icon={getSectionIcon(component)} context={context} />

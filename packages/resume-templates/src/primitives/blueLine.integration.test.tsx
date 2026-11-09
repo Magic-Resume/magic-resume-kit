@@ -7,6 +7,7 @@ import { getTemplateById, getTemplateManifestById, templateRegistry } from '../r
 import { MagicResumeRenderer } from '../renderer/MagicResumeRenderer';
 import { MagicResumePdfDocument } from '../pdf/MagicResumePdfDocument';
 import { PdfRichText } from '../pdf/PdfRichText';
+import { EditableCanvasProvider } from '../renderer/EditableCanvas';
 import type { Resume } from '../types/resume';
 
 const resume = {
@@ -24,6 +25,47 @@ const resume = {
   documentLanguage: 'zh',
 } as unknown as Resume;
 
+test('Blue Line uses the existing Header and DefaultSection components without a private tree', () => {
+  const template = getTemplateById('blue-line');
+  assert.equal(template.components[0].type, 'Header');
+  for (const component of template.components.slice(1)) {
+    assert.equal(component.type, 'DefaultSection');
+    assert.ok(component.fieldMap?.description, `${component.id}: standard description binding`);
+  }
+  assert.ok(template.components.every((component) => component.tree === undefined));
+});
+
+test('compact presentation preserves partial contacts, technology, groups and field editing without a template ID check', () => {
+  const template = structuredClone(getTemplateById('blue-line'));
+  template.id = 'reusable-compact-layout';
+  const data = {
+    ...resume,
+    info: { ...resume.info, customFields: [{ id: 'profile', name: '', value: 'https://example.com/profile', icon: 'github' }] },
+    sections: {
+      experience: [{ id: 'exp', company: 'Example Company', position: 'Engineer', visible: true,
+        summary: '<ul><li>Main experience</li></ul>', groups: [{ title: 'Delivery group', description: '<p>Nested contribution</p>' }] }],
+      projects: [{ id: 'project', name: 'Example Project', technologies: 'TypeScript / React', visible: true }],
+    },
+    sectionOrder: [{ key: 'experience', label: 'Experience' }, { key: 'projects', label: 'Projects' }],
+  } as unknown as Resume;
+  const html = renderToStaticMarkup(
+    <EditableCanvasProvider value={{
+      enabled: true, pendingByPath: {}, processingPaths: [], errorsByPath: {}, activePath: null,
+      onHandleClick() {}, onAccept() {}, onDiscard() {}, onRegenerate() {}, onRetry() {}, onSectionHandleClick() {},
+    }}>
+      <MagicResumeRenderer template={template} data={data} />
+    </EditableCanvasProvider>,
+  );
+  const pdf = renderToStaticMarkup(<MagicResumePdfDocument template={template} data={data} />);
+  for (const output of [html, pdf]) {
+    for (const text of ['https://example.com/profile', 'Example Company', 'Engineer', 'Delivery group', 'Nested contribution', 'TypeScript / React']) {
+      assert.ok(output.includes(text), `shared components preserve ${text}`);
+    }
+  }
+  assert.match(html, /data-resume-path="sections\.experience\[exp\]\.company"/);
+  assert.match(pdf, /justify-content:center;margin-top:-/);
+});
+
 test('blue-line uses the compact delivery metrics on the page', () => {
   const template = getTemplateById('blue-line');
   assert.equal(template.designTokens.typography.fontSize.sm, '13.3px');
@@ -39,6 +81,51 @@ test('blue-line uses the compact delivery metrics on the page', () => {
   assert.match(pdf, /padding-right:33\.75/);
   assert.match(pdf, /padding-bottom:31\.5/);
   assert.match(pdf, /padding-left:33\.75/);
+});
+
+test('optical list-marker lift is opt-in: off by default, on only when requested', () => {
+  // The marker lift is an opt-in. Rendering RichText directly isolates the marker
+  // from template-level margins: with the flag off the marker box keeps its
+  // geometric center (no negative margin-top), and only when a template opts in
+  // (Blue Line does, via MagicResumePdfDocument) is the bullet pulled up.
+  const list = '<ul><li>带符号的经历正文</li></ul>';
+  const props = { html: list, color: '#000', fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.3 };
+
+  const hasLiftedMarker = (pdf: string) =>
+    [...pdf.matchAll(/margin-top:(-?[\d.]+)/g)].some((match) => Number(match[1]) < 0);
+
+  const off = renderToStaticMarkup(React.createElement(PdfRichText, props));
+  const on = renderToStaticMarkup(React.createElement(PdfRichText, { ...props, liftListMarker: true }));
+
+  assert.ok(!hasLiftedMarker(off), 'default (every non-opted template) keeps the centered marker');
+  assert.doesNotMatch(off, /justify-content:center;margin-top:/, 'disabled markers preserve the original PDF style');
+  assert.ok(hasLiftedMarker(on), 'opting in pulls the marker to its optical center');
+});
+
+test('rich-text bullet adjustment follows component configuration for base and customized templates', () => {
+  const data = {
+    ...resume,
+    sections: {
+      experience: [{ id: 'exp', company: 'Example', visible: true,
+        summary: '<ul><li>First line with enough words to wrap in a narrow column<ul><li>Nested item</li></ul></li></ul><ol><li>Ordered item</li></ol>' }],
+    },
+    sectionOrder: [{ key: 'experience', label: 'Experience' }],
+  } as unknown as Resume;
+  for (const { template: base } of Object.values(templateRegistry)) {
+    for (const customized of [false, true]) {
+      const template = structuredClone(base);
+      if (customized) template.id = `${base.id}-custom`;
+      const pdf = renderToStaticMarkup(<MagicResumePdfDocument template={template} data={{ ...data, template: base.id }} />);
+      const markers = [...pdf.matchAll(/<VIEW style="([^"]*)"/g)]
+        .map((match) => match[1])
+        .filter((style) => style.includes('justify-content:center') && style.includes('flex-shrink:0') && style.includes('height:'));
+      assert.ok(markers.length >= 2, `${template.id}: exercises outer and nested rich-text bullets`);
+      for (const marker of markers) {
+        if (base.components.find((component) => component.dataBinding === 'sections.experience')?.props?.listMarkerAlignment === 'first-line') assert.match(marker, /margin-top:-/, template.id);
+        else assert.doesNotMatch(marker, /margin-top:/, `${template.id}: legacy bullet style is unchanged`);
+      }
+    }
+  }
 });
 
 test('blue-line is accepted by the shared schema and exposed by the registry', () => {
@@ -99,50 +186,5 @@ test('blue-line localizes every section for English documents and preserves expl
     const custom = { ...data, sectionOrder: [{ key: 'openSource', label: 'sections.openSource', title: 'Selected Community Work' }] };
     const customized = renderToStaticMarkup(<Renderer template={template} data={custom} locale="zh" />);
     assert.ok(customized.includes('Selected Community Work'));
-  }
-});
-
-test('optical list-marker lift is opt-in: off by default, on only when requested', () => {
-  // The marker lift is an opt-in. Rendering RichText directly isolates the marker
-  // from template-level margins: with the flag off the marker box keeps its
-  // geometric center (no negative margin-top), and only when a template opts in
-  // (Blue Line does, via MagicResumePdfDocument) is the bullet pulled up.
-  const list = '<ul><li>带符号的经历正文</li></ul>';
-  const props = { html: list, color: '#000', fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.3 };
-
-  const hasLiftedMarker = (pdf: string) =>
-    [...pdf.matchAll(/margin-top:(-?[\d.]+)/g)].some((match) => Number(match[1]) < 0);
-
-  const off = renderToStaticMarkup(React.createElement(PdfRichText, props));
-  const on = renderToStaticMarkup(React.createElement(PdfRichText, { ...props, liftListMarker: true }));
-
-  assert.ok(!hasLiftedMarker(off), 'default (every non-opted template) keeps the centered marker');
-  assert.doesNotMatch(off, /justify-content:center;margin-top:/, 'disabled markers preserve the original PDF style');
-  assert.ok(hasLiftedMarker(on), 'opting in pulls the marker to its optical center');
-});
-
-test('rich-text bullet adjustment follows component configuration for base and customized templates', () => {
-  const data = {
-    ...resume,
-    sections: {
-      experience: [{ id: 'exp', company: 'Example', visible: true,
-        summary: '<ul><li>First line with enough words to wrap in a narrow column<ul><li>Nested item</li></ul></li></ul><ol><li>Ordered item</li></ol>' }],
-    },
-    sectionOrder: [{ key: 'experience', label: 'Experience' }],
-  } as unknown as Resume;
-  for (const { template: base } of Object.values(templateRegistry)) {
-    for (const customized of [false, true]) {
-      const template = structuredClone(base);
-      if (customized) template.id = `${base.id}-custom`;
-      const pdf = renderToStaticMarkup(<MagicResumePdfDocument template={template} data={{ ...data, template: base.id }} />);
-      const markers = [...pdf.matchAll(/<VIEW style="([^"]*)"/g)]
-        .map((match) => match[1])
-        .filter((style) => style.includes('justify-content:center') && style.includes('flex-shrink:0') && style.includes('height:'));
-      assert.ok(markers.length >= 2, `${template.id}: exercises outer and nested rich-text bullets`);
-      for (const marker of markers) {
-        if (base.components.find((component) => component.dataBinding === 'sections.experience')?.props?.listMarkerAlignment === 'first-line') assert.match(marker, /margin-top:-/, template.id);
-        else assert.doesNotMatch(marker, /margin-top:/, `${template.id}: legacy bullet style is unchanged`);
-      }
-    }
   }
 });
