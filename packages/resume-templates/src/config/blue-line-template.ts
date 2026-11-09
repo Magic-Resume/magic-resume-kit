@@ -28,7 +28,7 @@ export const blueLineTemplate: MagicTemplateDSL = {
     { id: 'header', type: 'Tree', dataBinding: 'info', position: { area: 'main' }, tree: blueLineHeaderPreset() },
     ...sections.map(([key, title]) => ({
       id: `${key}-section`, type: 'Tree' as const, dataBinding: `sections.${key}`,
-      position: { area: 'main' as const }, props: { title }, tree: blueLineSectionPreset(key, title),
+      position: { area: 'main' as const }, props: { title, listMarkerAlignment: 'first-line' }, tree: blueLineSectionPreset(key, title),
     })),
   ],
 };

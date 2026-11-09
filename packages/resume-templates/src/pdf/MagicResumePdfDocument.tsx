@@ -1121,7 +1121,10 @@ const ComponentBlock = ({ component, data, sidebar, context }: {
       context.templateStyles,
     );
     if (!root) return null;
-    return <>{renderTreeNode(root, { fontFamily: context.richTextFontFamily })}</>;
+    return <>{renderTreeNode(root, {
+      fontFamily: context.richTextFontFamily,
+      liftListMarker: component.props?.listMarkerAlignment === 'first-line',
+    })}</>;
   }
 
   if (component.dataBinding === 'info') {
