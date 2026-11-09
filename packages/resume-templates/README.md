@@ -33,6 +33,9 @@ metrics are shared by DOM and PDF, and the PDF renderer converts CSS pixels to
 points at its boundary. Arbitrary `Tree` components and `templateOverride` remain
 available for free-form layouts.
 
+See [Blue Line validation](../../docs/blue-line-validation.md) for package checks,
+local PDF preview commands, application integration and before/after evidence.
+
 ## PDF fonts
 
 The host serves subset `.woff2` files at `/fonts/` and matching full `.woff` files at `/fonts/full/`. Copy the application's existing `public/fonts` directory, retaining its font licenses and build scripts. Fonts are intentionally not included in this package.
