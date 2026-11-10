@@ -1,0 +1,173 @@
+{
+  "info": {
+    "fullName": "示例",
+    "headline": "前端 / 后端 / Agent / 全栈研发工程师",
+    "email": "demo.user@example.com",
+    "phoneNumber": "",
+    "address": "",
+    "website": "https://example.com",
+    "avatar": "",
+    "customFields": [
+      {
+        "id": "contact-01",
+        "name": "GitHub",
+        "value": "https://example.com/xxxxxxxx",
+        "icon": "github"
+      }
+    ]
+  },
+  "sections": {
+    "education": [
+      {
+        "id": "education-01",
+        "visible": true,
+        "school": "示例大学",
+        "degree": "本科",
+        "date": "2020 - 2024",
+        "summary": "<ul><li><strong>计算机科学与技术：</strong>学习程序设计、数据结构、操作系统与软件工程，通过课程项目练习需求分析、协作开发和测试。</li></ul>"
+      }
+    ],
+    "skills": [
+      {
+        "id": "skills-01",
+        "visible": true,
+        "summary": "<ul><li>前端开发：使用 TypeScript 与 React 构建界面，关注组件复用、键盘操作以及不同屏幕尺寸下的阅读体验。</li><li>后端开发：使用 Node.js 编写接口，理解输入校验、错误处理、鉴权和数据访问的基本方法。</li><li>数据管理：熟悉关系型数据库与缓存的常见用途，能够根据查询方式设计清晰的数据结构。</li><li>工程协作：使用 Git 管理变更，通过代码审查、自动检查和简短文档保持团队沟通。</li><li>自动化助手：了解 Agent 的工具调用与任务状态，能够为示例流程设计清楚的输入、输出和失败处理。</li><li>质量保障：为关键业务规则编写测试，结合日志与可复现步骤定位界面和接口问题。</li><li>性能优化：能够分析请求、渲染和资源加载过程，优先处理影响用户操作的等待与卡顿。</li><li>交付维护：了解容器和持续集成的基本流程，能够补充运行说明、发布记录与常见问题排查方法。</li></ul>"
+      }
+    ],
+    "experience": [
+      {
+        "id": "experience-01",
+        "visible": true,
+        "company": "示例软件公司",
+        "position": "全栈研发工程师",
+        "date": "2024 - 至今",
+        "summary": "<p>参与内部演示产品的界面、接口与工具建设，与设计和测试同学协作完成需求拆解、开发验证及文档整理。</p>",
+        "groups": [
+          {
+            "title": "示例工作台",
+            "summary": "<ul><li><strong>界面开发：</strong>实现列表、筛选、表单和详情视图，将重复交互整理为可复用组件，并补充加载与空状态。</li><li><strong>接口协作：</strong>定义清晰的请求和响应结构，为输入校验、分页与错误提示编写说明，便于前后端共同验证。</li><li><strong>阅读体验：</strong>整理标题、正文与辅助信息的样式规则，检查长文本换行、链接展示和不同视口下的内容顺序。</li><li><strong>回归验证：</strong>使用固定的合成数据检查关键页面，将发现的问题记录为可复现步骤并在修复后再次验证。</li></ul>"
+          },
+          {
+            "title": "示例自动化助手",
+            "summary": "<ul><li><strong>流程设计：</strong>把演示任务拆分为输入确认、工具执行与结果检查，向用户展示当前状态和下一步操作。</li><li><strong>异常处理：</strong>为取消、超时和无效输入提供明确提示，保留必要的上下文，支持用户调整后继续操作。</li><li><strong>交付文档：</strong>编写工具接入、配置与测试说明，使用可公开的样例帮助协作者独立运行和排查问题。</li></ul>"
+          }
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "id": "project-01",
+        "visible": true,
+        "name": "示例协作笔记",
+        "technologies": "TypeScript / React / Node.js",
+        "summary": "<p>面向学习与演示场景的笔记工具，用于练习文档组织、编辑状态管理和协作流程。</p><ul><li><strong>内容编辑：</strong>支持标题、段落与列表，保持编辑、预览和导出之间的内容顺序与基础格式一致。</li><li><strong>状态管理：</strong>区分草稿、保存中和已保存状态，在请求失败时保留用户输入并提供重试入口。</li><li><strong>权限边界：</strong>为演示账号设计只读与可编辑两类权限，使用独立的合成内容验证各类入口。</li><li><strong>质量检查：</strong>整理固定输入和预期行为，结合单元测试与界面检查验证常见编辑操作。</li></ul>"
+      },
+      {
+        "id": "project-02",
+        "visible": true,
+        "name": "示例任务看板",
+        "technologies": "TypeScript / React / CSS",
+        "summary": "<ul><li><strong>任务组织：</strong>支持按状态浏览任务、查看详情和编辑备注，为长标题与空列表提供清楚的展示方式。</li><li><strong>操作反馈：</strong>统一保存、撤销与错误提示，补充键盘焦点和可访问性说明，便于不同用户完成操作。</li></ul>"
+      }
+    ],
+    "openSource": [
+      {
+        "id": "open-source-01",
+        "visible": true,
+        "name": "示例组件集",
+        "technologies": "React / TypeScript",
+        "summary": "<ul><li><strong>组件实现：</strong>整理按钮、输入框与提示信息的公共行为，提供简洁的参数说明和独立运行示例。</li><li><strong>维护协作：</strong>补充边界场景与变更记录，通过小范围修改降低使用方升级时的理解成本。</li></ul>"
+      },
+      {
+        "id": "open-source-02",
+        "visible": true,
+        "name": "示例脚本工具",
+        "technologies": "Node.js / JavaScript",
+        "summary": "<ul><li><strong>工具开发：</strong>为重复的本地整理工作提供命令行入口，校验参数并输出便于理解的执行结果。</li><li><strong>使用说明：</strong>提供安装、运行和故障排查示例，使用临时目录与合成文件验证工具行为。</li></ul>"
+      },
+      {
+        "id": "open-source-03",
+        "visible": true,
+        "name": "示例文档主题",
+        "technologies": "HTML / CSS / Markdown",
+        "summary": "<ul><li><strong>阅读布局：</strong>设计清晰的标题层级与内容间距，为链接、列表和代码片段提供统一的阅读样式。</li><li><strong>响应适配：</strong>检查窄屏与宽屏下的内容排列，使导航和正文都能保持合理的操作与阅读顺序。</li><li><strong>公开示例：</strong>使用虚构的文章与账号信息演示效果，确保截图和测试数据能够独立复现。</li></ul>"
+      }
+    ],
+    "personalEvaluation": [
+      {
+        "id": "evaluation-01",
+        "visible": true,
+        "name": "个人评价",
+        "summary": "<ul><li>愿意先理解需求与使用场景，再通过小步实现、及时验证和清楚记录推进工作。</li><li>重视代码可读性与协作沟通，能够主动说明限制，并根据反馈调整实现。</li><li>持续学习前后端与自动化工具，使用可复现的示例检验理解并分享经验。</li></ul>"
+      }
+    ],
+    "languages": [],
+    "certificates": [],
+    "awards": [],
+    "profiles": [],
+    "summary": []
+  },
+  "sectionOrder": [
+    {
+      "key": "basics",
+      "label": "基本信息"
+    },
+    {
+      "key": "education",
+      "label": "教育经历",
+      "title": "教育经历"
+    },
+    {
+      "key": "skills",
+      "label": "专业技能",
+      "title": "专业技能"
+    },
+    {
+      "key": "experience",
+      "label": "工作经历",
+      "title": "工作经历"
+    },
+    {
+      "key": "projects",
+      "label": "项目经历",
+      "title": "项目经历"
+    },
+    {
+      "key": "openSource",
+      "label": "开源贡献",
+      "title": "开源贡献"
+    },
+    {
+      "key": "personalEvaluation",
+      "label": "个人评价",
+      "title": "个人评价"
+    },
+    {
+      "key": "languages",
+      "label": "语言能力"
+    },
+    {
+      "key": "certificates",
+      "label": "证书资质"
+    },
+    {
+      "key": "awards",
+      "label": "获奖经历"
+    },
+    {
+      "key": "profiles",
+      "label": "个人主页"
+    },
+    {
+      "key": "summary",
+      "label": "个人总结"
+    }
+  ],
+  "template": "blue-line",
+  "themeColor": "#2458b8",
+  "typography": "Arial, \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+  "customTemplate": {},
+  "name": "公开排版测试简历",
+  "documentLanguage": "zh",
+  "documentLanguageSource": "explicit"
+}

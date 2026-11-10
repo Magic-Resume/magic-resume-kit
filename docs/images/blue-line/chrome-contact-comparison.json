@@ -1,0 +1,208 @@
+{
+  "scope": "Controlled movement regression on actual Chrome PNGs; not a claim of original misalignment, root cause, or visual acceptance.",
+  "capture": {
+    "cssClip": [
+      350,
+      150,
+      735,
+      55
+    ],
+    "dpr": 2,
+    "cdpScale": 1,
+    "outputDimensions": [
+      1470,
+      110
+    ],
+    "outputPixelsPerCssPixel": 2
+  },
+  "beforeSha256": "87f3aa404b867233b03826e24fdf603d6fc3185048c30f3fe0fb357c8ff2b1ad",
+  "afterSha256": "71406dad6b0178993c7ea4815c147f027259b453de6e9d4ac5bfb56bb612e136",
+  "expectedDisplacementOutputPx": [
+    0,
+    -2
+  ],
+  "expectedDisplacementCssPx": [
+    0,
+    -1.0
+  ],
+  "method": {
+    "grayscaleInkThresholds": [
+      96,
+      128,
+      160,
+      192,
+      224
+    ],
+    "searchDxOutputPx": [
+      -1,
+      0,
+      1
+    ],
+    "searchDyOutputPx": [
+      -6,
+      -5,
+      -4,
+      -3,
+      -2,
+      -1,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "score": "Mean foreground-mask F1 across five thresholds; exact displacement plus per-threshold shape quality required.",
+    "minimumMaskF1": 0.9
+  },
+  "icons": {
+    "mail": {
+      "roiOutputPx": [
+        32,
+        52,
+        80,
+        104
+      ],
+      "bestMatch": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 1.0,
+        "f1ByThreshold": {
+          "96": 1.0,
+          "128": 1.0,
+          "160": 1.0,
+          "192": 1.0,
+          "224": 1.0
+        }
+      },
+      "runnerUp": {
+        "dx": -1,
+        "dy": -2,
+        "meanF1": 0.7689339087353263,
+        "f1ByThreshold": {
+          "96": 0.7294685990338164,
+          "128": 0.7294685990338164,
+          "160": 0.7827715355805244,
+          "192": 0.7827715355805244,
+          "224": 0.8201892744479495
+        }
+      },
+      "bestDisplacementCssPx": [
+        0.0,
+        -1.0
+      ]
+    },
+    "globe": {
+      "roiOutputPx": [
+        752,
+        2,
+        800,
+        60
+      ],
+      "bestMatch": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 1.0,
+        "f1ByThreshold": {
+          "96": 1.0,
+          "128": 1.0,
+          "160": 1.0,
+          "192": 1.0,
+          "224": 1.0
+        }
+      },
+      "runnerUp": {
+        "dx": 0,
+        "dy": -1,
+        "meanF1": 0.7710102785407197,
+        "f1ByThreshold": {
+          "96": 0.7161716171617162,
+          "128": 0.7189542483660131,
+          "160": 0.7948051948051948,
+          "192": 0.7906976744186046,
+          "224": 0.8344226579520697
+        }
+      },
+      "bestDisplacementCssPx": [
+        0.0,
+        -1.0
+      ]
+    },
+    "github": {
+      "roiOutputPx": [
+        752,
+        52,
+        800,
+        106
+      ],
+      "bestMatch": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 1.0,
+        "f1ByThreshold": {
+          "96": 1.0,
+          "128": 1.0,
+          "160": 1.0,
+          "192": 1.0,
+          "224": 1.0
+        }
+      },
+      "runnerUp": {
+        "dx": 0,
+        "dy": -1,
+        "meanF1": 0.7188430276240937,
+        "f1ByThreshold": {
+          "96": 0.6444444444444445,
+          "128": 0.6444444444444445,
+          "160": 0.7564766839378239,
+          "192": 0.7564766839378239,
+          "224": 0.7923728813559322
+        }
+      },
+      "bestDisplacementCssPx": [
+        0.0,
+        -1.0
+      ]
+    }
+  },
+  "text": {
+    "mail": {
+      "roiOutputPx": [
+        80,
+        52,
+        740,
+        110
+      ],
+      "changedPixels": 0,
+      "identical": true
+    },
+    "globe": {
+      "roiOutputPx": [
+        800,
+        2,
+        1470,
+        56
+      ],
+      "changedPixels": 0,
+      "identical": true
+    },
+    "github": {
+      "roiOutputPx": [
+        800,
+        56,
+        1470,
+        110
+      ],
+      "changedPixels": 0,
+      "identical": true
+    }
+  },
+  "outsideIconRois": {
+    "changedPixels": 0,
+    "identical": true
+  },
+  "totalChangedPixels": 1173,
+  "passed": true,
+  "failures": []
+}
