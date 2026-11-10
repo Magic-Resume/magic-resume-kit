@@ -57,6 +57,9 @@ export function compactPresentationStyles(tokens?: DesignTokens): Record<string,
     contactText: { color: colors?.textSecondary ?? '#20252b', textDecoration: 'none', fontSize: 13, lineHeight: 1.6, flexShrink: 1, minWidth: 0, maxWidth: '100%' },
     contactValue: { flexBasis: 0, flexGrow: 1, flexShrink: 1, minWidth: 0, maxWidth: '100%' },
     contactIcon: { marginTop: -6, flexShrink: 0 },
+    // In a centered row, two extra pixels of negative margin lift the icon's
+    // center by one pixel. Keep this optical adjustment separate from sections.
+    headerContactIcon: { marginTop: -8, flexShrink: 0 },
   };
 }
 

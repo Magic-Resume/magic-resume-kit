@@ -93,6 +93,31 @@ test('compact contact fields preserve inline formatting in HTML and PDF', () => 
   }
 });
 
+for (const [backend, outputIndex, sectionMargin] of [['DOM', 0, -6], ['PDF', 1, -4.5]] as const) {
+  test(`${backend} keeps the header contact adjustment separate from section custom-field icons`, () => {
+    const customFields = [{ id: 'profile', name: 'Profile', value: 'https://example.com/profile', icon: 'github' }];
+    const data = {
+      info: { fullName: 'Example', email: 'mail@example.com', website: 'https://example.com', customFields },
+      sections: { skills: [{ id: 'skill', name: 'TypeScript', customFields }] },
+    } as unknown as Partial<Resume>;
+    const iconMargins = (binding: string) => parse(outputs(data, binding)[outputIndex])
+      .querySelectorAll('*')
+      .filter((node) => node.tagName.toLowerCase() === 'svg')
+      .flatMap((node) => {
+        const match = node.getAttribute('style')?.match(/(?:^|;)margin-top:([\d.-]+)px(?:;|$)/);
+        return match ? [Number(match[1])] : [];
+      });
+    const header = iconMargins('info');
+    const section = iconMargins('sections.skills');
+    assert.equal(header.length, 3, 'mail, website and custom contact must all be exercised');
+    // f06bcc6 section output is the baseline: a header-only adjustment must not
+    // move the same custom field when it appears in a resume section.
+    assert.deepEqual(section, [sectionMargin], 'section custom-field placement must stay unchanged');
+    assert.ok(header.every((margin) => margin === header[0]), 'ordinary and custom header contacts share the adjustment');
+    assert.ok(header[0] < section[0], 'the optical adjustment must be confined to header contacts');
+  });
+}
+
 test('compact experience preserves title band, groups, custom fields, summary fallback and visibility', () => {
   const data = { sections: { experience: [
     { id: 'exp', visible: true, company: '示例科技', position: '工程师', description: '<p>旧版描述</p>',

@@ -471,7 +471,7 @@ const HeaderBlock = ({ info, component, context }: {
     const styles = compactPdfStyles(context.templateStyles.designTokens);
     const renderContact = (item: (typeof contacts)[number]) => (
       <View key={item.field} style={styles.contact}>
-        {item.icon && !labelContacts ? <PdfHugeIcon icon={item.icon} size={17 * PX_TO_PT} color={styles.muted.color as string} style={styles.contactIcon} /> : null}
+        {item.icon && !labelContacts ? <PdfHugeIcon icon={item.icon} size={17 * PX_TO_PT} color={styles.muted.color as string} style={styles.headerContactIcon} /> : null}
         {labelContacts ? <View style={[styles.contactValue, { flexBasis: 'auto', flexGrow: 0, maxWidth: '40%' }]}>
           <Text style={styles.contactText}>{`${item.label}：`}</Text>
         </View> : null}
@@ -494,7 +494,7 @@ const HeaderBlock = ({ info, component, context }: {
           </View>
           <View style={[column, { alignItems: 'flex-end' }]}>
             {contacts.filter((item) => item.field === 'website').map(renderContact)}
-            {props.showCustomFields !== false ? <CompactCustomFields fields={info.customFields} styles={styles} /> : null}
+            {props.showCustomFields !== false ? <CompactCustomFields fields={info.customFields} styles={{ ...styles, contactIcon: styles.headerContactIcon }} /> : null}
           </View>
         </View>
       </View>

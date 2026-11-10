@@ -152,7 +152,7 @@ export const Header = React.memo(function Header({
       const icon = item.icon && (custom || contactStyle === 'icon')
         ? React.cloneElement(item.icon as React.ReactElement<{ className?: string; style?: React.CSSProperties }>, {
           className: undefined,
-          style: { ...compact.contactIcon, width: custom ? 15 : 17, height: custom ? 15 : 17, color: String(compact.muted.color) },
+          style: { ...compact.headerContactIcon, width: custom ? 15 : 17, height: custom ? 15 : 17, color: String(compact.muted.color) },
         })
         : null;
       return (
