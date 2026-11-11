@@ -11,6 +11,12 @@ interface PdfRichTextProps {
   fontSize: number;
   lineHeight?: number;
   marginTop?: number;
+  /**
+   * Compensate for extra line leading with {@link pdfListMarkerOpticalOffset}.
+   * Disabled by default to preserve the published package's geometric centering.
+   * Templates must explicitly enable this after checking their font output.
+   */
+  liftListMarker?: boolean;
 }
 
 type HtmlRenderers = NonNullable<React.ComponentProps<typeof Html>['renderers']>;
@@ -204,7 +210,21 @@ const resolveStyleColor = (styles: Style[], fallback: string): string => {
   return color;
 };
 
-const createRenderers = (fontSize: number, lineHeight: number, color: string): HtmlRenderers => ({
+/**
+ * Remove half the extra leading from the marker's line-box center. For L >= 1,
+ * F*L/2 - F*(L-1)/2 = F/2: an em-box optical alignment, not measured glyph bounds.
+ * The supported host's OS/2 font-metric patch places Source Han glyphs near that
+ * center. Other fonts/unpatched hosts can explicitly retain geometric centering.
+ */
+export const pdfListMarkerOpticalOffset = (
+  fontSize: number,
+  lineHeight: number,
+): number => {
+  const extraLeading = Math.max(0, lineHeight - 1);
+  return extraLeading === 0 ? 0 : -fontSize * extraLeading / 2;
+};
+
+const createRenderers = (fontSize: number, lineHeight: number, color: string, liftListMarker: boolean): HtmlRenderers => ({
   p: ({ style, children }) => (
     <Text style={[...safeTextStyles(style), safeTextLayoutStyle]}>{children}</Text>
   ),
@@ -255,6 +275,7 @@ const createRenderers = (fontSize: number, lineHeight: number, color: string): H
           flexShrink: 0,
           height: fontSize * lineHeight,
           justifyContent: 'center',
+          ...(liftListMarker ? { marginTop: pdfListMarkerOpticalOffset(fontSize, lineHeight) } : {}),
           width: markerWidth,
         }}
       >
@@ -313,6 +334,7 @@ export const PdfRichText = ({
   fontSize,
   lineHeight = 1.5,
   marginTop = 0,
+  liftListMarker = false,
 }: PdfRichTextProps) => {
   const normalizedHtml = normalizeRichTextHtml(html);
   if (!normalizedHtml) return null;
@@ -321,7 +343,7 @@ export const PdfRichText = ({
     <View style={[constrainedWidthStyle, { marginTop }]}>
       <Html
         resetStyles
-        renderers={createRenderers(fontSize, lineHeight, color)}
+        renderers={createRenderers(fontSize, lineHeight, color, liftListMarker)}
         style={[constrainedWidthStyle, { color, fontFamily, fontSize, lineHeight }]}
         stylesheet={createStylesheet(color, fontSize, lineHeight)}
       >

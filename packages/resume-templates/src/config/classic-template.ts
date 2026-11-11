@@ -59,6 +59,7 @@ export const classicTemplate: MagicTemplateDSL = {
     type: "single-column",
     containerWidth: "794px",
     padding: "12px",  // 减少内边距，匹配原始的 p-3
+    pdfListMarkerAlignment: 'first-line',
     gap: "16px"       // 减少组件间距
   },
   
@@ -234,4 +235,4 @@ export const classicTemplate: MagicTemplateDSL = {
       }
     }
   ]
-}; 
+};
