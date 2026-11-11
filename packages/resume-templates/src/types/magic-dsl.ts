@@ -67,6 +67,8 @@ export interface MagicTemplateDSL {
     containerWidth: string;
     containerHeight?: string;
     padding: string;
+    /** PDF only: omitted/uniform preserves published parsing; shorthand uses CSS sides. */
+    pdfPaddingMode?: 'uniform' | 'shorthand';
     gap: string;
     
     // 两栏布局配置
