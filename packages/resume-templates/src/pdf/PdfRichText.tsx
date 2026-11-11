@@ -211,8 +211,10 @@ const resolveStyleColor = (styles: Style[], fallback: string): string => {
 };
 
 /**
- * Shift a geometric marker up by half the extra line leading. This does not
- * measure glyph bounds; templates must opt in after checking their font output.
+ * Remove half the extra leading from the marker's line-box center. For L >= 1,
+ * F*L/2 - F*(L-1)/2 = F/2: an em-box optical alignment, not measured glyph bounds.
+ * The supported host's OS/2 font-metric patch places Source Han glyphs near that
+ * center. Other fonts/unpatched hosts can explicitly retain geometric centering.
  */
 export const pdfListMarkerOpticalOffset = (
   fontSize: number,

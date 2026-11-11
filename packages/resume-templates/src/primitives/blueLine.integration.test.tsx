@@ -102,7 +102,7 @@ test('PDF rich text preserves the official marker placement unless explicitly en
   assert.doesNotMatch(off, /justify-content:center;margin-top:/);
 });
 
-test('ordinary templates preserve official markers while Blue Line explicitly enables its lift', () => {
+test('Classic and Blue Line opt into first-line markers while the other templates preserve official centering', () => {
   const data = {
     ...resume,
     sections: {
@@ -121,7 +121,7 @@ test('ordinary templates preserve official markers while Blue Line explicitly en
         .filter((style) => style.includes('justify-content:center') && style.includes('flex-shrink:0') && style.includes('height:'));
       assert.ok(markers.length >= 2, `${template.id}: exercises outer and nested rich-text bullets`);
       for (const marker of markers) {
-        if (base.id === 'blue-line') assert.match(marker, /margin-top:-/, `${template.id}: explicit compact lift`);
+        if (base.id === 'blue-line' || base.id === 'classic') assert.match(marker, /margin-top:-/, `${template.id}: explicit template or component lift`);
         else assert.doesNotMatch(marker, /margin-top:/, `${template.id}: official geometric centering`);
       }
     }
@@ -138,6 +138,8 @@ test('compact and component-tree lists require explicit first-line alignment', (
   for (const path of ['compact', 'tree'] as const) {
     for (const alignment of [undefined, 'first-line', 'center'] as const) {
       const template = structuredClone(getTemplateById(path === 'compact' ? 'blue-line' : 'classic'));
+      // This test isolates component opt-in from any template-level policy.
+      delete template.layout.pdfListMarkerAlignment;
       const component = template.components.find((item) => item.dataBinding === 'sections.experience');
       assert.ok(component);
       component.props = { ...component.props };

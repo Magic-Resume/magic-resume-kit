@@ -69,6 +69,8 @@ export interface MagicTemplateDSL {
     padding: string;
     /** PDF only: omitted/uniform preserves published parsing; shorthand uses CSS sides. */
     pdfPaddingMode?: 'uniform' | 'shorthand';
+    /** PDF unordered markers: first-line centers in the em box; omitted keeps line-box centering. Component props override this policy. */
+    pdfListMarkerAlignment?: 'center' | 'first-line';
     gap: string;
     
     // 两栏布局配置

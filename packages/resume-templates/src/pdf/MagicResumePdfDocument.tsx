@@ -310,6 +310,8 @@ interface RenderContext {
   showTitleDivider: boolean;
   showTitleIcon: boolean;
   richTextFontFamily: string;
+  /** Resolved template/component policy; controls unordered markers only. */
+  liftListMarker: boolean;
   cjkFallback: boolean;
   fontFamilies?: PdfFontFamilyAliases;
   locale?: string;
@@ -769,12 +771,14 @@ const Description = ({
   fontFamily,
   fontSize = 8,
   marginTop = 0,
+  liftListMarker,
 }: {
   value: string;
   color: string;
   fontFamily: string;
   fontSize?: number;
   marginTop?: number;
+  liftListMarker: boolean;
 }) => {
   return value ? (
     <PdfRichText
@@ -784,6 +788,7 @@ const Description = ({
       fontSize={fontSize}
       lineHeight={1.5}
       marginTop={marginTop}
+      liftListMarker={liftListMarker}
     />
   ) : null;
 };
@@ -839,7 +844,7 @@ const DefaultSectionBlock = ({ component, items, context }: {
     const renderDescription = (value: string) => value ? (
       <View style={styles.body}>
         <PdfRichText html={value} color={context.colors.text} fontFamily={context.richTextFontFamily} fontSize={compactBodyFontSize}
-          lineHeight={context.typography.lineHeight} liftListMarker={props.listMarkerAlignment === 'first-line'} />
+          lineHeight={context.typography.lineHeight} liftListMarker={context.liftListMarker} />
       </View>
     ) : null;
     const renderField = (record: Record<string, unknown>, slot: string, style?: Style, linked = false) => {
@@ -940,6 +945,7 @@ const DefaultSectionBlock = ({ component, items, context }: {
                 color={context.colors.text}
                 fontFamily={context.richTextFontFamily}
                 fontSize={bodyFontSize}
+                liftListMarker={context.liftListMarker}
               />
             </View>
           );
@@ -999,6 +1005,7 @@ const ListSectionBlock = ({ component, items, context }: {
                 color={context.colors.text}
                 fontFamily={context.richTextFontFamily}
                 fontSize={bodyFontSize}
+                liftListMarker={context.liftListMarker}
               />
             </View>
           );
@@ -1086,6 +1093,7 @@ const ThreeColumnSectionBlock = ({ component, items, context }: {
                 fontFamily={context.richTextFontFamily}
                 fontSize={bodyFontSize}
                 marginTop={description ? 2 : 0}
+                liftListMarker={context.liftListMarker}
               />
             </View>
           );
@@ -1134,6 +1142,7 @@ const InlineKeyValueSectionBlock = ({ component, items, context }: {
                     fontFamily={context.richTextFontFamily}
                     fontSize={bodyFontSize}
                     lineHeight={1.35}
+                    liftListMarker={context.liftListMarker}
                   />
                 </View>
               ) : null}
@@ -1242,6 +1251,7 @@ const TimelineBlock = ({ component, items, context }: {
                   color={color}
                   fontFamily={context.richTextFontFamily}
                   marginTop={4}
+                  liftListMarker={context.liftListMarker}
                 />
               </View>
             </View>
@@ -1252,12 +1262,19 @@ const TimelineBlock = ({ component, items, context }: {
   );
 };
 
-const ComponentBlock = ({ component, data, sidebar, context }: {
+const ComponentBlock = ({ component, data, sidebar, context: templateContext }: {
   component: ComponentDefinition;
   data: Resume;
   sidebar: boolean;
   context: RenderContext;
 }) => {
+  // Resolve once for every component route, including synthesized custom sections.
+  // An absent/unknown component value inherits the template's explicit PDF policy.
+  const alignment = component.props?.listMarkerAlignment;
+  const context: RenderContext = {
+    ...templateContext,
+    liftListMarker: alignment === 'first-line' ? true : alignment === 'center' ? false : templateContext.liftListMarker,
+  };
   // ── 绞杀榕接缝（与 HTML 渲染器同一个判断） ──
   // 这两处必须同时改：只改一边，就又造出了一对孪生实现——
   // `summary` / `awards` 在导出里消失，起因正是这种「本该一致的两处」漂了。
@@ -1273,7 +1290,7 @@ const ComponentBlock = ({ component, data, sidebar, context }: {
     if (!root) return null;
     return <>{renderTreeNode(root, {
       fontFamily: context.richTextFontFamily,
-      liftListMarker: component.props?.listMarkerAlignment === 'first-line',
+      liftListMarker: context.liftListMarker,
     })}</>;
   }
 
@@ -1314,6 +1331,7 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
         fontFamilies,
       ),
       width: cssSizeToPoints(template.layout.containerWidth, FREE_FORM_PAGE_SIZE.width),
+      liftListMarker: template.layout.pdfListMarkerAlignment === 'first-line',
     });
   }
 
@@ -1333,6 +1351,7 @@ export const MagicResumePdfDocument = ({ data, template, locale: requestedLocale
     showTitleDivider: template.layout.showTitleDivider !== false,
     showTitleIcon: template.layout.showTitleIcon !== false,
     richTextFontFamily: getPdfRichTextFontFamily(typography.fontFamily.primary, cjkFallback, fontFamilies),
+    liftListMarker: template.layout.pdfListMarkerAlignment === 'first-line',
     cjkFallback,
     fontFamilies,
     locale,
