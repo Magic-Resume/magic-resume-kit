@@ -13,8 +13,8 @@ interface PdfRichTextProps {
   marginTop?: number;
   /**
    * Compensate for extra line leading with {@link pdfListMarkerOpticalOffset}.
-   * Off by default to preserve legacy marker placement. Opt in only for
-   * templates whose rendered output has been checked with this adjustment.
+   * Enabled by default to preserve the commercial installation's marker placement.
+   * Pass false only when a caller explicitly requests geometric centering.
    */
   liftListMarker?: boolean;
 }
@@ -332,7 +332,7 @@ export const PdfRichText = ({
   fontSize,
   lineHeight = 1.5,
   marginTop = 0,
-  liftListMarker = false,
+  liftListMarker = true,
 }: PdfRichTextProps) => {
   const normalizedHtml = normalizeRichTextHtml(html);
   if (!normalizedHtml) return null;

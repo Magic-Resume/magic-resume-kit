@@ -838,7 +838,7 @@ const DefaultSectionBlock = ({ component, items, context }: {
     const renderDescription = (value: string) => value ? (
       <View style={styles.body}>
         <PdfRichText html={value} color={context.colors.text} fontFamily={context.richTextFontFamily} fontSize={compactBodyFontSize}
-          lineHeight={context.typography.lineHeight} liftListMarker={props.listMarkerAlignment === 'first-line'} />
+          lineHeight={context.typography.lineHeight} liftListMarker={props.listMarkerAlignment !== 'center'} />
       </View>
     ) : null;
     const renderField = (record: Record<string, unknown>, slot: string, style?: Style, linked = false) => {
@@ -1272,7 +1272,7 @@ const ComponentBlock = ({ component, data, sidebar, context }: {
     if (!root) return null;
     return <>{renderTreeNode(root, {
       fontFamily: context.richTextFontFamily,
-      liftListMarker: component.props?.listMarkerAlignment === 'first-line',
+      liftListMarker: component.props?.listMarkerAlignment !== 'center',
     })}</>;
   }
 

@@ -83,26 +83,26 @@ test('blue-line uses the compact delivery metrics on the page', () => {
   assert.match(pdf, /padding-left:33\.75/);
 });
 
-test('optical list-marker lift is opt-in: off by default, on only when requested', () => {
-  // The marker lift is an opt-in. Rendering RichText directly isolates the marker
-  // from template-level margins: with the flag off the marker box keeps its
-  // geometric center (no negative margin-top), and only when a template opts in
-  // (Blue Line does, via MagicResumePdfDocument) is the bullet pulled up.
+test('PDF rich text preserves the commercial installed marker placement unless explicitly disabled', () => {
+  // Commercial baseline 395d261 already lifted every marker. A missing option must retain
+  // that output when an application upgrades its template package.
   const list = '<ul><li>带符号的经历正文</li></ul>';
   const props = { html: list, color: '#000', fontFamily: 'Helvetica', fontSize: 10, lineHeight: 1.3 };
 
   const hasLiftedMarker = (pdf: string) =>
     [...pdf.matchAll(/margin-top:(-?[\d.]+)/g)].some((match) => Number(match[1]) < 0);
 
-  const off = renderToStaticMarkup(React.createElement(PdfRichText, props));
+  const inherited = renderToStaticMarkup(React.createElement(PdfRichText, props));
+  const off = renderToStaticMarkup(React.createElement(PdfRichText, { ...props, liftListMarker: false }));
   const on = renderToStaticMarkup(React.createElement(PdfRichText, { ...props, liftListMarker: true }));
 
-  assert.ok(!hasLiftedMarker(off), 'default (every non-opted template) keeps the centered marker');
-  assert.doesNotMatch(off, /justify-content:center;margin-top:/, 'disabled markers preserve the original PDF style');
-  assert.ok(hasLiftedMarker(on), 'opting in pulls the marker to its optical center');
+  assert.equal(inherited, on, 'omitting the option preserves the installed default');
+  assert.ok(hasLiftedMarker(inherited), 'installed default retains its marker lift');
+  assert.ok(!hasLiftedMarker(off), 'an explicit false still disables the marker lift');
+  assert.doesNotMatch(off, /justify-content:center;margin-top:/);
 });
 
-test('rich-text bullet adjustment follows component configuration for base and customized templates', () => {
+test('registered and customized templates preserve the commercial installed marker default', () => {
   const data = {
     ...resume,
     sections: {
@@ -121,8 +121,44 @@ test('rich-text bullet adjustment follows component configuration for base and c
         .filter((style) => style.includes('justify-content:center') && style.includes('flex-shrink:0') && style.includes('height:'));
       assert.ok(markers.length >= 2, `${template.id}: exercises outer and nested rich-text bullets`);
       for (const marker of markers) {
-        if (base.components.find((component) => component.dataBinding === 'sections.experience')?.props?.listMarkerAlignment === 'first-line') assert.match(marker, /margin-top:-/, template.id);
-        else assert.doesNotMatch(marker, /margin-top:/, `${template.id}: legacy bullet style is unchanged`);
+        assert.match(marker, /margin-top:-/, `${template.id}: installed default placement survives an upgrade`);
+        if (base.id === 'classic') {
+          const marginTop = marker.match(/(?:^|;)margin-top:(-?[\d.]+)px(?:;|$)/)?.[1];
+          assert.equal(Number(marginTop), -2.25, 'Classic retains the installed -2.25pt / -3 CSS px marker offset');
+        }
+      }
+    }
+  }
+});
+
+test('compact and component-tree lists inherit the installed default and honor explicit alignment', () => {
+  const list = '<ul><li>First line<ul><li>Nested line</li></ul></li></ul>';
+  const data = {
+    ...resume,
+    sections: { experience: [{ id: 'exp', company: 'Example', visible: true, summary: list }] },
+    sectionOrder: [{ key: 'experience', label: 'Experience' }],
+  } as unknown as Resume;
+  for (const path of ['compact', 'tree'] as const) {
+    for (const alignment of [undefined, 'first-line', 'center'] as const) {
+      const template = structuredClone(getTemplateById(path === 'compact' ? 'blue-line' : 'classic'));
+      const component = template.components.find((item) => item.dataBinding === 'sections.experience');
+      assert.ok(component);
+      component.props = { ...component.props };
+      if (alignment) component.props.listMarkerAlignment = alignment;
+      else delete component.props.listMarkerAlignment;
+      if (path === 'tree') component.tree = {
+        version: 1,
+        styles: { body: { fontSize: 12, lineHeight: 1.5 } },
+        root: { id: 'body', type: 'RichText', style: ['body'], value: list },
+      };
+      const pdf = renderToStaticMarkup(<MagicResumePdfDocument template={template} data={data} />);
+      const markers = [...pdf.matchAll(/<VIEW style="([^"]*)"/g)]
+        .map((match) => match[1])
+        .filter((style) => style.includes('justify-content:center') && style.includes('flex-shrink:0') && style.includes('height:'));
+      assert.equal(markers.length, 2, `${path}/${alignment}: includes outer and nested markers`);
+      for (const marker of markers) {
+        if (alignment === 'center') assert.doesNotMatch(marker, /margin-top:/);
+        else assert.match(marker, /margin-top:-/, `${path}/${alignment}: retain installed placement`);
       }
     }
   }

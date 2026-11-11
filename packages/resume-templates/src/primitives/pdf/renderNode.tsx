@@ -49,8 +49,8 @@ const DEFAULT_FONT_SIZE = 10 * PX_TO_PT;
 export interface PdfRenderContext {
   fontFamily: string;
   /**
-   * Opt in to the optical list-marker lift (see {@link PdfRichText}). Defaults to
-   * off so templates that do not set it keep the geometrically centered marker.
+   * Optical list-marker lift (see {@link PdfRichText}). Omitted values inherit
+   * the installed commercial default; explicit false keeps the geometric marker center.
    */
   liftListMarker?: boolean;
 }
