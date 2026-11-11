@@ -25,6 +25,33 @@ the reproduced scene isolated movement to the three contact SVGs, with visible
 text and pixels outside their regions unchanged; the user accepted the after
 image. These observations do not establish camera scaling as the root cause.
 
+## Commercial compatibility baseline
+
+The compatibility gate is the **commercial-installed `395d261` package**, not
+main at `148cd7a`. Matching main did not preserve the installed application's
+list-marker behavior: `f022865` disabled the existing default lift outside
+explicitly configured components, moving Classic's circles down while leaving
+its text unchanged. Classic's 9pt rich text at 1.5 line height had an installed
+lift of `-2.25pt`, equivalent to 3 CSS pixels.
+
+Commit `f03f515` restores the installed default across legacy sections, direct
+rich text, compact components and trees. Existing compact/tree
+`listMarkerAlignment: 'center'` settings and low-level `liftListMarker: false`
+still disable the lift; `first-line` and omitted settings retain it. This does
+not add alignment settings to legacy components that did not support them.
+
+The [commercial-baseline comparison](images/blue-line/commercial-baseline-compatibility.json)
+records both private and anonymous fixtures: all 19 legacy templates match
+`395d261` in DOM markup, PDF markup and 144-dpi PDF pixels. Blue Line matches
+the accepted `a49c594` output in PDF markup and 192-dpi pixels, preserving the
+contact correction and its original-scene acceptance. After the final package
+was installed and port 3003 restarted, a separate actual-Chrome Classic check
+used the original resume at camera `(0, 0, 1)` and DPR 2. The common visible
+CSS clip `(323, 80, 794, 440)` produced 1588 x 880 PNGs: the earlier 1010 changed
+pixels became zero against the installed baseline. This is a visible page-start
+check, not an assertion about the entire scrollable document; screenshots remain
+local and the report contains only hashes and geometry.
+
 ## Public illustrations and capture conditions
 
 The public images below are a separate run using the
@@ -59,6 +86,7 @@ and are not used for lossless pixel assertions.
 ## Reproduce in isolated application hosts
 
 1. Build and pack the baseline and corrected kit versions in separate worktrees.
+   Use `395d261` for the installed baseline and include `f03f515` in the candidate.
    Install the corresponding immutable package with a local `file:` dependency
    in disposable hosts at `7508be3`, following the [consumer guide](consumer-migration.md).
    Preserve the non-template lock, fonts and PDF patches; build the host's
@@ -98,28 +126,33 @@ and are not used for lossless pixel assertions.
 
 ## Package identity and regression checks
 
-The disposable hosts used the same host commit `7508be3`, non-template
+The contact-capture hosts used the same host commit `7508be3`, non-template
 versions, fonts and PDF patches. All 198 installed package files matched their
-immutable archive, and the corrected installed `dist` matched its source build.
-The packages retained version `1.1.1`; these SHA256 hashes identify local inputs:
+immutable archive, and the installed `dist` matched its source build. Version
+metadata alone does not identify these local packages. The following hashes
+identify the original contact-capture inputs and the final compatibility package:
 
 - Installed-package baseline (`395d261`):
   `6f305c97cd75e7a4e72be52f19393d4f5cdfb83688eff73806d412b055faa13a`.
 - Shared-refactor control (`f06bcc6`):
   `60e0d4c235f45ceeb9f097ecd79c05411d2dc39a813c885f3baf862aba2df6a4`.
-- Corrected package (`640f5ba` rendering code):
+- Accepted header-correction package (`640f5ba` rendering code, before `f03f515`):
   `fea3f24dc7d79f68beb11e1433a87e16aa9013ce97f2f1aaecc4c884d4011b98`.
+- Current compatibility package (`f03f515`, loaded by port 3003):
+  `877f00c9e4355edc34ade028ce6d5acd89d5335dc78014db8208c064c85e66e6`.
 - Anonymous fixture:
   `88fc3bc3f17039c1e27f42dc1ee9d30e40e27ac8080f88838d05dfd28f21dee3`.
 
 The [font filename/hash manifest](fixtures/blue-line-full-font-sha256.json)
-contains no font payloads. Build, lint, all 260 template tests, package inspection,
-clean consumer installation and the legacy freeze guard passed. DOM/PDF tests
-keep Header tuning separate from section custom-field icons. Private and public
-fixtures each matched main across all 19 legacy templates' DOM, PDF markup and
-PDF raster output. Historical main/layout evidence remains in
-[Blue Line validation](blue-line-validation.md). These checks cover the tested
-inputs, not every possible resume, font, zoom or token combination.
+contains no font payloads. The current suite has 261 template tests, including
+Classic's installed `-2.25pt` marker offset, explicit alignment overrides and
+Header/section icon isolation. All 261 template tests, build, lint, the legacy
+freeze guard, inspection of all six archives and clean consumer/standalone MCP
+installation passed on the final rendering code.
+The earlier main-based regression results are retained as historical evidence in
+[Blue Line validation](blue-line-validation.md); the commercial gate above
+supersedes them for this upgrade. Checks cover the tested inputs, not every
+possible resume, font, zoom or token combination.
 
 ## Supplement: the earlier camera scale-1 experiment
 

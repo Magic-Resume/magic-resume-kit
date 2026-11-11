@@ -19,9 +19,10 @@ pnpm test:consumer
 ```
 
 Run the build before the tests: the build cleans workspace package outputs that
-the tests import. The template suite contains 260 tests, including opt-in marker
-alignment across base/custom template IDs, editable anchors, field aliases,
-inline formatting, CSS units, URL precedence and nested-group visibility.
+the tests import. The template suite contains 261 tests, including preservation
+of the commercial-installed marker default, explicit alignment overrides across
+base/custom template IDs, editable anchors, field aliases, inline formatting,
+CSS units, URL precedence and nested-group visibility.
 
 ## Render PDFs locally
 
@@ -38,10 +39,15 @@ Open `.artifacts/pdf-after/blue-line.pdf` and `classic.pdf` side by side. Check
 contacts, wrapped bullet text, experience title bands and rich-text formatting.
 The script also checks PDF structure and the host-required synthetic-bold patches.
 
-For a historical comparison, create a separate checkout at `148cd7a`, install
-and build it, and run the same command with the same fonts into a different output
-directory. Compare that result with the current checkout; never render two
-versions against different input data or fonts.
+For the current compatibility gate, build the commercial-installed baseline
+`395d261` in a separate checkout and compare it with the candidate using the same
+input data, fonts and PDF patches. All 19 legacy templates must retain that
+installed output; Blue Line's contact correction is checked against its accepted
+`a49c594` output. See the [commercial compatibility results](blue-line-chrome-validation.md#commercial-compatibility-baseline).
+
+The main checkout at `148cd7a` is useful for the historical layout comparison
+below. It is not the installed commercial baseline and cannot establish upgrade
+compatibility. Never compare versions rendered with different data or fonts.
 
 ## Before and after evidence
 
@@ -70,11 +76,17 @@ pdftoppm -png -r 144 -singlefile -H 1800 /path/to/before/blue-line.pdf before-ma
 pdftoppm -png -r 144 -singlefile -H 1800 /path/to/after/blue-line.pdf after-shared
 ```
 
-Separate local validation used one private resume snapshot throughout. All 19
-legacy templates matched `148cd7a` in DOM markup, PDF markup and PDF raster output
-at 144 dpi. Blue Line's established compact output before and after component
-unification matched at 192 dpi with zero changed pixels. These checks describe
-that snapshot, not every possible custom token/data combination.
+Historical validation during component unification and through `a49c594` used
+fixed resume snapshots. The 19 legacy templates matched `148cd7a` in DOM markup,
+PDF markup and 144-dpi pixels; Blue Line's component unification preserved its
+then-established compact output at 192 dpi. Those results remain valid for those
+revisions, but they did not test compatibility with commercial-installed
+`395d261`: the installed package already lifted list markers, whereas main did
+not. Commit `f03f515` restores that installed default and preserves explicit
+centering overrides. Current private/public regression results use `395d261`
+for the 19 legacy templates and accepted `a49c594` for Blue Line, as recorded in
+the linked Chrome validation guide. No comparison covers every possible custom
+token/data combination.
 
 Historical alignment screenshots found from the previous evening already show
 the compact V7 layout. They are not the main baseline and contain personal

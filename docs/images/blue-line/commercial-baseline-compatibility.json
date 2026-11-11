@@ -1,0 +1,88 @@
+{
+  "scope": "Commercial-installed-baseline compatibility. Synthetic and private fixtures are reported separately; Blue Line is excluded from the 19-template gate.",
+  "baselineKitCommit": "395d261b4dec03511b5ba0dd84523e43f569ffe9",
+  "badKitCommit": "a49c59441a511b3789c180d2680ce49e26d00bed",
+  "fixedKitCommit": "f03f515f8715226642ab50f73c7689ae3288199f",
+  "publicFixtureSha256": "88fc3bc3f17039c1e27f42dc1ee9d30e40e27ac8080f88838d05dfd28f21dee3",
+  "legacyTemplateCount": 19,
+  "legacyRasterDpi": 144,
+  "beforeCompatibilityFix": {
+    "fixture": "public",
+    "domIdenticalTemplates": 19,
+    "pdfRasterAffectedTemplates": 19,
+    "onlyListMarkersChangedTemplates": 19,
+    "textFontStyleAndGlyphGeometryIdenticalTemplates": 19,
+    "randomFontSubsetPrefixesIgnored": true
+  },
+  "afterCompatibilityFix": {
+    "public": {
+      "domIdenticalTemplates": 19,
+      "pdfMarkupIdenticalTemplates": 19,
+      "pdfRasterIdenticalTemplates": 19,
+      "totalChangedRasterPixels": 0
+    },
+    "private": {
+      "domIdenticalTemplates": 19,
+      "pdfMarkupIdenticalTemplates": 19,
+      "pdfRasterIdenticalTemplates": 19,
+      "totalChangedRasterPixels": 0
+    }
+  },
+  "blueLine": {
+    "excludedFromLegacyGate": true,
+    "userAcceptedHeaderRenderingCodeCommit": "640f5ba3c5ad932f6d0b123307572552f99ae753",
+    "preCompatibilityHeaderVersionPreserved": {
+      "pdfMarkupIdentical": true,
+      "rasterDpi": 192,
+      "changedRasterPixels": 0
+    }
+  },
+  "finalCommitRenderingVerification": {
+    "greenCandidateArchiveSha256": "d8d39cf32cdd18b6004d054513df4147eec9ff507778b5c09c752cfab9dafbfc",
+    "finalCommitArchiveSha256": "877f00c9e4355edc34ade028ce6d5acd89d5335dc78014db8208c064c85e66e6",
+    "compiledJavaScriptFileCount": 96,
+    "compiledJavaScriptEntrySetsIdentical": true,
+    "allCompiledJavaScriptBytesIdentical": true,
+    "conclusion": "Compared with the candidate that passed the GREEN rendering checks, the final committed package has identical bytes in all 96 compiled JavaScript files. Only comments, the focused Classic assertion and release notes were finalized after those checks; no duplicate 19-template rerun was needed."
+  },
+  "limits": "Results cover the tested fixtures and font inputs. The bad-version marker classification uses unordered lists; this is not a claim about every custom token, resume or list variant.",
+  "actualChromeClassic": {
+    "scope": "Same original resume, common visible page-start clip only; original screenshots remain local.",
+    "beforeCompatibilityFixChangedPixels": 1010,
+    "afterCompatibilityFixChangedPixels": 0,
+    "capture": {
+      "cameraScale": 1,
+      "pan": [
+        0,
+        0
+      ],
+      "dpr": 2,
+      "clipCss": [
+        323,
+        80,
+        794,
+        440
+      ],
+      "canvasBitmap": [
+        1588,
+        2379
+      ]
+    },
+    "files": [
+      {
+        "sha256": "7bb902dd2cd7ca100209bb9b8d9129acd565312f7ccfc6c37d5ad2c937d53164",
+        "dimensions": [
+          1588,
+          880
+        ]
+      },
+      {
+        "sha256": "7bb902dd2cd7ca100209bb9b8d9129acd565312f7ccfc6c37d5ad2c937d53164",
+        "dimensions": [
+          1588,
+          880
+        ]
+      }
+    ]
+  }
+}
