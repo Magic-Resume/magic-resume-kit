@@ -45,10 +45,9 @@ versions against different input data or fonts.
 
 ## Before and after evidence
 
-For the separate application screenshot check, see [Blue Line Chrome contact
-validation](blue-line-chrome-validation.md). It distinguishes the unchanged
-shared refactor from the later header-only optical candidate; the layout
-evidence below remains the historical main comparison.
+For the reproduced application fault and accepted contact correction, see
+[Blue Line Chrome fault reproduction and acceptance](blue-line-chrome-validation.md).
+The layout evidence below remains the historical main comparison.
 
 These are the top 1800 raster pixels at 144 dpi, generated with the **unchanged
 synthetic fixture** in `packages/resume-templates/scripts/render-pdf-smoke.mjs`.

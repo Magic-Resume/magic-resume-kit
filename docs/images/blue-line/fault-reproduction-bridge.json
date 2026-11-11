@@ -1,0 +1,70 @@
+{
+  "hostCommit": "7508be30aa71ccf4b25195579884138b518461c9",
+  "beforeKitCommit": "395d261b4dec03511b5ba0dd84523e43f569ffe9",
+  "afterRenderingCodeCommit": "640f5ba3c5ad932f6d0b123307572552f99ae753",
+  "userConfirmedOriginalFault": true,
+  "userConfirmedCandidateAligned": true,
+  "originalFaultClip": {
+    "sha256": "d96cb345ed61b3e50abfa5208b2792602fbd851f3a1cc7f2287dea4c82b7595a",
+    "dimensionsPx": [
+      1120,
+      110
+    ]
+  },
+  "isolatedBeforeClip": {
+    "sha256": "d96cb345ed61b3e50abfa5208b2792602fbd851f3a1cc7f2287dea4c82b7595a",
+    "dimensionsPx": [
+      1120,
+      110
+    ]
+  },
+  "acceptedCandidateClip": {
+    "sha256": "b8cea1ab4b74e940d8adf7c68d61e31268e89b8ef02fdbbd051661844b4aea98",
+    "dimensionsPx": [
+      1120,
+      110
+    ]
+  },
+  "originalAndIsolatedBeforeFileBytesIdentical": true,
+  "originalAndIsolatedBeforeChangedPixels": 0,
+  "capture": {
+    "cameraScale": 1.238,
+    "cameraPanCssPx": [
+      111.55,
+      -96.79
+    ],
+    "browserZoom": 1,
+    "viewportCssPx": [
+      1440,
+      660
+    ],
+    "dpr": 2,
+    "cdpClipCssPx": {
+      "x": 465,
+      "y": 95,
+      "width": 560,
+      "height": 55,
+      "scale": 1
+    },
+    "canvasRectViewportCssPx": {
+      "x": 412.7489929199219,
+      "y": 2.25,
+      "width": 982.971923828125,
+      "height": 2167.979736328125
+    },
+    "canvasBitmapPx": [
+      1588,
+      3502
+    ],
+    "outputDimensionsPx": [
+      1120,
+      110
+    ]
+  },
+  "matchingSceneChecks": {
+    "allCanvasRectanglesIdentical": true,
+    "allViewportDimensionsIdentical": true,
+    "allCameraTransformsIdentical": true,
+    "allCanvasBitmapDimensionsIdentical": true
+  }
+}

@@ -1,123 +1,141 @@
-# Blue Line Chrome contact validation
+# Blue Line Chrome fault reproduction and acceptance
 
-The compact Header now raises contact icons by 1 CSS pixel relative to
-`f06bcc6`, while preserving text placement and section custom-field icons.
-The screenshots below come from the real application's Chrome PDF canvas.
-Visual acceptance of the reported symptom remains pending.
+The reported contact-icon misalignment was reproduced from the original
+commercial application's Chrome scene at `http://localhost:3000`. The user
+confirmed that original scene showed the problem and that the corrected image
+was aligned. This acceptance concerns the reproduced scene; the earlier camera
+scale-1 comparison alone was not fault-reproduction or fix evidence.
 
-## Versions and inputs
+## Reproduction and correction
 
-- The originally installed package matched `395d261` in all 96 JavaScript files
-  checked. It already contained the earlier contact adjustment.
-- The shared-component refactor at `f06bcc6` matched that installed version's
-  contact pixels in Chrome. Refactoring alone did not add a further correction.
-- Commit `640f5ba` adds the header-only optical adjustment. The common
-  `contactIcon` margin stays at `-6`; Header uses `headerContactIcon` at `-8`.
-  A centered flex row applies half the margin difference to the icon center,
-  so the two-pixel margin change raises each icon by one CSS pixel. DOM and PDF
-  use the same CSS-pixel metrics, converted to PDF points at the boundary.
-- Historical main `148cd7a` is a separate layout control; the older main/shared
-  layout evidence remains in [Blue Line validation](blue-line-validation.md).
+The original installed package matched `395d261` across all 96 JavaScript files
+checked. With the same private resume and captured camera, an isolated host
+using that package reproduced the original contact clip byte-for-byte. The
+[reproduction bridge](images/blue-line/fault-reproduction-bridge.json) records
+that connection between the original application and the isolated baseline.
+Private screenshots and detailed local reports are not published here.
 
-Both disposable application checkouts used host commit `7508be3`, identical
-non-template dependencies, fonts and PDF patches. All 198 installed package
-files matched their immutable archive, and the candidate's installed `dist`
-matched its built source. The package version remains `1.1.1`; hashes identify
-these local packages, not a new npm release:
+In the earlier controlled scale-1 captures, the shared-component refactor at
+`f06bcc6` preserved the installed baseline's contact pixels; refactoring alone
+did not make the correction. Commit `640f5ba` added
+the scoped header adjustment: `contactIcon.marginTop` stayed at `-6`, while
+Header used `headerContactIcon.marginTop: -8`. Section custom-field icons kept
+their previous placement in DOM and PDF output. The subsequent comparison in
+the reproduced scene isolated movement to the three contact SVGs, with visible
+text and pixels outside their regions unchanged; the user accepted the after
+image. These observations do not establish camera scaling as the root cause.
 
-- Before (`f06bcc6`): `60e0d4c235f45ceeb9f097ecd79c05411d2dc39a813c885f3baf862aba2df6a4`.
-- After (`640f5ba` rendering code): `fea3f24dc7d79f68beb11e1433a87e16aa9013ce97f2f1aaecc4c884d4011b98`.
-- [Public fixture](fixtures/blue-line-contact-resume.json):
-  `88fc3bc3f17039c1e27f42dc1ee9d30e40e27ac8080f88838d05dfd28f21dee3`.
-- [Font filename/hash manifest](fixtures/blue-line-full-font-sha256.json).
-  Font payloads and private resume data are not included.
+## Public illustrations and capture conditions
 
-## Actual Chrome before and after
+The public images below are a separate run using the
+[anonymous fixture](fixtures/blue-line-contact-resume.json). They illustrate the
+same camera and correction; they are not the original private screenshots or
+byte-identical substitutes for the private reproduction bridge.
 
-Before, shared components at `f06bcc6`:
+Before, the reproduced installed-package baseline:
 
-![Chrome contacts before](images/blue-line/chrome-contacts-before.png)
+![Public Chrome fault scene before](images/blue-line/chrome-fault-before.png)
 
-After, header-only optical adjustment:
+After, the header-only correction:
 
-![Chrome contacts after](images/blue-line/chrome-contacts-after.png)
+![Public Chrome fault scene after](images/blue-line/chrome-fault-after.png)
 
-[Editor overview before](images/blue-line/chrome-editor-before.jpg) and
-[after](images/blue-line/chrome-editor-after.jpg) provide application context.
-Those overviews are original JPEG bytes. The quantitative comparison uses only
-the lossless contact PNGs, copied without conversion or resizing.
+[Editor before](images/blue-line/chrome-fault-editor-before.jpg) and
+[editor after](images/blue-line/chrome-fault-editor-after.jpg) show the surrounding
+application. The right-side panel remained open as in the original scene, so
+part of the website/GitHub text is occluded. The comparison concerns the visible
+clip and does not make claims about text hidden behind that panel.
 
-Both captures used browser zoom 1x, DPR 2, a 1440 x 604 CSS-pixel viewport and
-editor camera `(x=0, y=0, scale=1)`. The canvas began at `(323, 80)`, displayed
-at width 794 CSS pixels, with a 1588 x 2845 bitmap. CDP captured CSS clip
-`(350, 150, 735, 55)` at scale 1, producing 1470 x 110 native PNGs.
+The captured camera used pan `(111.55, -96.79)` and scale `1.238`, browser zoom
+1x, a 1440 x 660 CSS-pixel viewport and DPR 2. In the private reproduction, the
+canvas CSS box was `(x=412.7489929, y=2.25, width=982.9719238,
+height=2167.9797)`. Public-fixture canvas height depends on its different content.
+The contact clip was `(465, 95, 560, 55)` CSS pixels, captured at CDP scale 1 as
+1120 x 110 PNGs. The [public comparison](images/blue-line/chrome-fault-comparison.json)
+records the anonymous clip hashes, measured SVG movement and unchanged-region
+checks. Original PNG bytes are retained; JPEG editor overviews provide context
+and are not used for lossless pixel assertions.
 
-The [comparison report](images/blue-line/chrome-contact-comparison.json) records:
+## Reproduce in isolated application hosts
 
-- Mail, globe and GitHub each move `(0, -2)` output pixels: `(0, -1)` CSS pixels.
-- Foreground masks match exactly after translation at all five tested grayscale
-  thresholds: `96`, `128`, `160`, `192`, `224`.
-- All three text regions and pixels outside the SVG regions have zero changes.
-  There are 1173 changed pixels inside the SVG regions.
-
-A separate actual-Chrome run using the original private resume observed the
-same one-pixel movement and unchanged text/outside pixels. Those artifacts
-remain local. Movement checks do not prove the original root cause, establish
-browser scaling as its cause, or replace a visual-acceptance decision.
-
-## Reproduce
-
-1. Build and pack the before/after kit versions in separate worktrees. Install
-   the corresponding immutable archive through a local `file:` dependency in
-   two disposable hosts at `7508be3`, following the [consumer guide](consumer-migration.md).
-   Preserve fonts, PDF patches and other dependency versions; build the host's
+1. Build and pack the baseline and corrected kit versions in separate worktrees.
+   Install the corresponding immutable package with a local `file:` dependency
+   in disposable hosts at `7508be3`, following the [consumer guide](consumer-migration.md).
+   Preserve the non-template lock, fonts and PDF patches; build the host's
    `@magic-resume/env` and `@magic-resume/genui` packages before starting it.
-2. Keep cloud sync disabled. Through each real dashboard, import the same public
-   fixture and choose Blue Line. Host `7508be3` strips `info.customFields` on
-   import, so re-add the same contact through both editors: name `GitHub`, value
-   `https://example.com/xxxxxxxx`, icon `github`.
-3. Apply this identical temporary camera handler in each disposable host's
-   `ResumePreviewPanel.tsx`. Open the real editor URL with `?qaScale=1` and
-   collapse both side panels. This changes camera placement only; PDF generation,
-   fonts, rasterization and production behavior remain unchanged.
+2. Keep cloud sync disabled. Import the same anonymous fixture through each real
+   dashboard and choose Blue Line. Host `7508be3` strips `info.customFields` on
+   import: re-add the same header contact in both editors with name `GitHub`,
+   value `https://example.com/xxxxxxxx` and icon `github`.
+3. Use this identical development-only handler in each disposable host's
+   `ResumePreviewPanel.tsx`. Open the real editor with
+   `?qaScene=commercial-original-as-found`, without `qaScale`, and retain the
+   right-side panel. The values came from the original application's captured
+   DOM camera; the handler changes only preview-camera placement.
 
    ```tsx
    onInit={(controls) => {
+     // Local acceptance harness only: keep PDF rendering untouched and make
+     // camera placement identical across the two disposable worktrees.
      const requested = process.env.NODE_ENV === 'development'
        ? new URLSearchParams(window.location.search).get('qaScale') : null;
+     const scene = process.env.NODE_ENV === 'development'
+       ? new URLSearchParams(window.location.search).get('qaScene') : null;
      if (requested === '1' || requested === '0.5') {
        controls.setTransform(0, 0, Number(requested), 0);
+     } else if (scene === 'commercial-original-as-found') {
+       controls.setTransform(111.55, -96.79, 1.238, 0);
      } else {
        controls.centerView(0.5, 0);
      }
    }}
    ```
 
-4. Restart the candidate host after installing its package, reload Chrome and
-   capture actual lossless PNGs using the geometry above. Check signatures and
-   dimensions; JPEG overviews or Node-generated PDFs cannot substitute for them.
+4. Restart after changing the installed package, reload Chrome and capture at
+   the geometry above. Check PNG signatures and dimensions. Preserve PDF
+   generation, fonts and rasterization; do not replace renderer files inside an
+   existing application's `node_modules` or use a replacement test page.
 
-The [screenshot verifier](../packages/resume-templates/scripts/check-chrome-contact-motion.py)
-requires Python, Pillow and NumPy. From the kit root, use a fresh output path:
+## Package identity and regression checks
 
-```sh
-python3 packages/resume-templates/scripts/check-chrome-contact-motion.py \
-  docs/images/blue-line/chrome-contacts-before.png \
-  docs/images/blue-line/chrome-contacts-after.png \
-  --expected-dy -2 --report /tmp/blue-line-chrome-motion-green.json
-```
+The disposable hosts used the same host commit `7508be3`, non-template
+versions, fonts and PDF patches. All 198 installed package files matched their
+immutable archive, and the corrected installed `dist` matched its source build.
+The packages retained version `1.1.1`; these SHA256 hashes identify local inputs:
 
-Using `--expected-dy 0` with another fresh report must fail. The verifier checks
-actual displacement, shape preservation, unchanged text and unchanged pixels
-outside the three SVG regions; it does not assert optical correctness.
+- Installed-package baseline (`395d261`):
+  `6f305c97cd75e7a4e72be52f19393d4f5cdfb83688eff73806d412b055faa13a`.
+- Shared-refactor control (`f06bcc6`):
+  `60e0d4c235f45ceeb9f097ecd79c05411d2dc39a813c885f3baf862aba2df6a4`.
+- Corrected package (`640f5ba` rendering code):
+  `fea3f24dc7d79f68beb11e1433a87e16aa9013ce97f2f1aaecc4c884d4011b98`.
+- Anonymous fixture:
+  `88fc3bc3f17039c1e27f42dc1ee9d30e40e27ac8080f88838d05dfd28f21dee3`.
 
-## Regression checks
+The [font filename/hash manifest](fixtures/blue-line-full-font-sha256.json)
+contains no font payloads. Build, lint, all 260 template tests, package inspection,
+clean consumer installation and the legacy freeze guard passed. DOM/PDF tests
+keep Header tuning separate from section custom-field icons. Private and public
+fixtures each matched main across all 19 legacy templates' DOM, PDF markup and
+PDF raster output. Historical main/layout evidence remains in
+[Blue Line validation](blue-line-validation.md). These checks cover the tested
+inputs, not every possible resume, font, zoom or token combination.
 
-Build, lint, all 260 template tests, package inspection, clean consumer
-installation and the legacy freeze guard passed. Two new DOM/PDF tests ensure
-Header tuning does not change section custom-field icons. Separate private and
-public fixtures each matched main in all 19 legacy templates' DOM, PDF markup
-and PDF raster output. These are results for the tested inputs, not every
-possible font, zoom, token or resume combination.
+## Supplement: the earlier camera scale-1 experiment
 
-Visual acceptance of the reported symptom remains pending.
+The [older before PNG](images/blue-line/chrome-contacts-before.png),
+[after PNG](images/blue-line/chrome-contacts-after.png),
+[editor before](images/blue-line/chrome-editor-before.jpg),
+[editor after](images/blue-line/chrome-editor-after.jpg) and
+[report](images/blue-line/chrome-contact-comparison.json) remain available.
+That separate 1440 x 604/DPR-2 capture used camera `(0, 0, 1)`, a 1588 x 2845
+canvas bitmap and CSS clip `(350, 150, 735, 55)`, producing 1470 x 110 PNGs.
+Its three SVGs moved up one CSS pixel with unchanged text/outside regions. Both
+images had appeared normal; this experiment alone did not reproduce the fault.
+
+The retained [motion verifier](../packages/resume-templates/scripts/check-chrome-contact-motion.py)
+requires Python, Pillow and NumPy and is specific to those older clips. With a
+fresh report path, run it on `chrome-contacts-before.png` and
+`chrome-contacts-after.png` using `--expected-dy -2`; a separate run with
+`--expected-dy 0` must fail. It tests controlled screenshot movement, not optical
+correctness, and is not the verifier for the new 1120 x 110 fault-scene clips.
