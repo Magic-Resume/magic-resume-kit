@@ -48,6 +48,11 @@ const DEFAULT_FONT_SIZE = 10 * PX_TO_PT;
  */
 export interface PdfRenderContext {
   fontFamily: string;
+  /**
+   * Optical list-marker lift (see {@link PdfRichText}). Omitted values inherit
+   * the installed commercial default; explicit false keeps the geometric marker center.
+   */
+  liftListMarker?: boolean;
 }
 
 export function renderNode(node: ResolvedNode, ctx: PdfRenderContext): React.ReactNode {
@@ -112,6 +117,7 @@ export function renderNode(node: ResolvedNode, ctx: PdfRenderContext): React.Rea
             fontSize={(style.fontSize as number) ?? DEFAULT_FONT_SIZE}
             color={(style.color as string) ?? '#000'}
             lineHeight={style.lineHeight as number | undefined}
+            liftListMarker={ctx.liftListMarker}
           />
         </View>
       );

@@ -1,0 +1,279 @@
+{
+  "scope": "Automated movement/isolation evidence using an independent public synthetic fixture in the reproduced camera scene. Optical acceptance is a separate user judgment.",
+  "hostCommit": "7508be30aa71ccf4b25195579884138b518461c9",
+  "beforeKitCommit": "395d261b4dec03511b5ba0dd84523e43f569ffe9",
+  "afterRenderingCodeCommit": "640f5ba3c5ad932f6d0b123307572552f99ae753",
+  "files": {
+    "before": {
+      "file": "chrome-fault-before.png",
+      "sha256": "077cddc4afda1b0487adf6077af06eeb73cb78462e53661aac5a7d809b8e9ea5",
+      "format": "PNG",
+      "dimensionsPx": [
+        1120,
+        110
+      ]
+    },
+    "after": {
+      "file": "chrome-fault-after.png",
+      "sha256": "0c8b4c9614e5034944219ed20a4cc7bc7292e3ac687789923b6619358d57db44",
+      "format": "PNG",
+      "dimensionsPx": [
+        1120,
+        110
+      ]
+    }
+  },
+  "capture": {
+    "cameraScale": 1.238,
+    "cameraPanCssPx": [
+      111.55,
+      -96.79
+    ],
+    "browserZoom": 1,
+    "viewportCssPx": [
+      1440,
+      660
+    ],
+    "dpr": 2,
+    "cdpClipCssPx": {
+      "x": 465,
+      "y": 95,
+      "width": 560,
+      "height": 55,
+      "scale": 1
+    },
+    "outputDimensionsPx": [
+      1120,
+      110
+    ],
+    "canvasRectViewportCssPx": {
+      "x": 412.7489929199219,
+      "y": 2.25,
+      "width": 982.971923828125,
+      "height": 1761.287109375
+    },
+    "canvasBitmapPx": [
+      1588,
+      2845
+    ],
+    "outputPixelsPerViewportCssPixel": 2,
+    "outputPixelsPerCanvasCssPixel": 2.476
+  },
+  "method": {
+    "grayscaleInkThresholds": [
+      96,
+      128,
+      160,
+      192,
+      224
+    ],
+    "integerTranslationSearchOutputPx": {
+      "dx": [
+        -1,
+        0,
+        1
+      ],
+      "dy": [
+        -6,
+        -5,
+        -4,
+        -3,
+        -2,
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "integerScore": "Mean foreground-mask F1 across five thresholds.",
+    "fractionalMotion": "With the observed zero horizontal integer displacement, exhaustively search vertical displacement -6 to +6 output pixels in 0.01-pixel steps; maximize cosine similarity of grayscale darkness after linear interpolation. No expected displacement enters selection.",
+    "nominalOutputDyForOneCanvasCssPixel": -2.476,
+    "pixelIsolation": "Exact RGB comparison for text and every pixel outside the specified icon ROIs."
+  },
+  "icons": {
+    "mail": {
+      "roiOutputPx": [
+        2,
+        52,
+        56,
+        108
+      ],
+      "changedPixelsInRoi": 820,
+      "bestIntegerTranslation": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 0.8924951242164184,
+        "f1ByThreshold": {
+          "96": 0.8835341365461847,
+          "128": 0.8524590163934426,
+          "160": 0.8939393939393939,
+          "192": 0.913232104121475,
+          "224": 0.9193109700815957
+        }
+      },
+      "runnerUp": {
+        "dx": 0,
+        "dy": -3,
+        "meanF1": 0.8653072255501947,
+        "f1ByThreshold": {
+          "96": 0.7630522088353414,
+          "128": 0.879284649776453,
+          "160": 0.8787878787878788,
+          "192": 0.8915401301518439,
+          "224": 0.9138712601994561
+        }
+      },
+      "fractionalVerticalMotion": {
+        "dyOutputPx": -2.47,
+        "dyViewportCssPx": -1.235,
+        "dyCanvasCssPx": -0.9975767366720518,
+        "cosineSimilarity": 0.9965865502220717,
+        "searchStepOutputPx": 0.01
+      }
+    },
+    "globe": {
+      "roiOutputPx": [
+        896,
+        2,
+        952,
+        58
+      ],
+      "changedPixelsInRoi": 1135,
+      "bestIntegerTranslation": {
+        "dx": 0,
+        "dy": -3,
+        "meanF1": 0.9071893716525542,
+        "f1ByThreshold": {
+          "96": 0.8470588235294118,
+          "128": 0.8991769547325102,
+          "160": 0.9068541300527241,
+          "192": 0.9352196574832464,
+          "224": 0.9476372924648787
+        }
+      },
+      "runnerUp": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 0.9067694596059651,
+        "f1ByThreshold": {
+          "96": 0.873202614379085,
+          "128": 0.8868312757201646,
+          "160": 0.9156414762741653,
+          "192": 0.9233060312732688,
+          "224": 0.9348659003831418
+        }
+      },
+      "fractionalVerticalMotion": {
+        "dyOutputPx": -2.48,
+        "dyViewportCssPx": -1.24,
+        "dyCanvasCssPx": -1.001615508885299,
+        "cosineSimilarity": 0.997431678714125,
+        "searchStepOutputPx": 0.01
+      }
+    },
+    "github": {
+      "roiOutputPx": [
+        896,
+        52,
+        952,
+        108
+      ],
+      "changedPixelsInRoi": 638,
+      "bestIntegerTranslation": {
+        "dx": 0,
+        "dy": -2,
+        "meanF1": 0.8847094293050117,
+        "f1ByThreshold": {
+          "96": 0.8414239482200647,
+          "128": 0.8623024830699775,
+          "160": 0.8929889298892989,
+          "192": 0.9052631578947369,
+          "224": 0.9215686274509803
+        }
+      },
+      "runnerUp": {
+        "dx": 0,
+        "dy": -3,
+        "meanF1": 0.8742650240290789,
+        "f1ByThreshold": {
+          "96": 0.7702265372168284,
+          "128": 0.8758465011286681,
+          "160": 0.8856088560885609,
+          "192": 0.9082706766917293,
+          "224": 0.9313725490196079
+        }
+      },
+      "fractionalVerticalMotion": {
+        "dyOutputPx": -2.47,
+        "dyViewportCssPx": -1.235,
+        "dyCanvasCssPx": -0.9975767366720518,
+        "cosineSimilarity": 0.9965044279405243,
+        "searchStepOutputPx": 0.01
+      }
+    }
+  },
+  "text": {
+    "identity": {
+      "roiOutputPx": [
+        0,
+        0,
+        880,
+        50
+      ],
+      "changedPixels": 0,
+      "identical": true,
+      "maxRgbDelta": 0
+    },
+    "mail": {
+      "roiOutputPx": [
+        60,
+        52,
+        880,
+        110
+      ],
+      "changedPixels": 0,
+      "identical": true,
+      "maxRgbDelta": 0
+    },
+    "globe": {
+      "roiOutputPx": [
+        958,
+        0,
+        1120,
+        58
+      ],
+      "changedPixels": 0,
+      "identical": true,
+      "maxRgbDelta": 0
+    },
+    "github": {
+      "roiOutputPx": [
+        954,
+        58,
+        1120,
+        110
+      ],
+      "changedPixels": 0,
+      "identical": true,
+      "maxRgbDelta": 0
+    }
+  },
+  "visualJudgment": {
+    "kind": "User statement, separate from automated motion evidence.",
+    "originalFaultConfirmedByUser": true,
+    "candidateAlignedConfirmedByUser": true,
+    "scope": "The user confirmed the original real-application fault scene and then the candidate in that same scene. These synthetic public images document the same rendering-code change and camera geometry."
+  },
+  "outsideIconRois": {
+    "changedPixels": 0,
+    "identical": true,
+    "maxRgbDelta": 0
+  },
+  "totalChangedPixels": 2593,
+  "textUnchanged": true,
+  "exactIsolationPassed": true
+}
